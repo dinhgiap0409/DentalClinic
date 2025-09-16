@@ -1,1 +1,38 @@
-/DentalClinic/nbproject/private/
+# Ignore Maven target/ or Gradle build/
+target/
+build/
+
+# Ignore IDE specific files
+*.iml
+.idea/
+.vscode/
+.classpath
+.project
+.settings/
+
+# Ignore compiled Java classes
+*.class
+
+# Ignore logs
+*.log
+
+# Ignore Tomcat / Jetty / server config
+*.war
+*.ear
+*.jar
+*.zip
+*.tar.gz
+*.rar
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+
+# Ignore dependency caches
+.gradle/
+.mvn/
