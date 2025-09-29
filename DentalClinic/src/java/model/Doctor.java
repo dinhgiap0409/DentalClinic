@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class Doctor {
 
     private int doctorID;
-    private int userId;
+    private Users userId;
     private String specialization;
     private String licenseNumber;
     private int yearsOfExperience;
@@ -24,7 +24,7 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(int doctorID, int userId, String specialization, String licenseNumber, int yearsOfExperience, String education, String biography, BigDecimal consultationFee) {
+    public Doctor(int doctorID, Users userId, String specialization, String licenseNumber, int yearsOfExperience, String education, String biography, BigDecimal consultationFee) {
         this.doctorID = doctorID;
         this.userId = userId;
         this.specialization = specialization;
@@ -43,11 +43,11 @@ public class Doctor {
         this.doctorID = doctorID;
     }
 
-    public int getUserId() {
+    public Users getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(Users userId) {
         this.userId = userId;
     }
 

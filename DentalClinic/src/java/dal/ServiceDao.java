@@ -6,6 +6,7 @@ package dal;
 
 import java.sql.*;
 import model.Service;
+import model.Users;
 
 /**
  *
@@ -16,6 +17,14 @@ public class ServiceDao extends DBContext {
     public ServiceDao() {
     }
 
+    private void setCreatedByParam(PreparedStatement ps, int index, Users createdBy) throws SQLException {
+        if (createdBy != null && createdBy.getUserId() > 0) {
+            ps.setInt(index, createdBy.getUserId());
+        } else {
+            ps.setNull(index, Types.INTEGER);
+        }
+    }
+
     private int insertService(Service service) {
         String sql = "INSERT INTO [dbo].[Services]\n"
                 + "           ([ServiceName]\n"
@@ -23,11 +32,9 @@ public class ServiceDao extends DBContext {
                 + "           ,[Price]\n"
                 + "           ,[Duration]\n"
                 + "           ,[IsActive]\n"
-                + "           ,[CreatedBy]\n"
-                + "           ,[CreatedDate])\n"
+                + "           ,[CreatedBy])\n"
                 + "     VALUES\n"
                 + "           (?\n"
-                + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?\n"
@@ -39,8 +46,7 @@ public class ServiceDao extends DBContext {
             ps.setBigDecimal(3, service.getPrice());
             ps.setInt(4, service.getDuration());
             ps.setBoolean(5, service.isIsActive());
-            ps.setInt(6, service.getCreatedBy());
-            ps.setTimestamp(7, service.getCreatedDate());
+            setCreatedByParam(ps, 6, service.getCreatedBy());
             int row = ps.executeUpdate();
             if (row > 0) {
                 try (ResultSet rs = ps.getGeneratedKeys()) {
@@ -61,9 +67,7 @@ public class ServiceDao extends DBContext {
                 + "       [Description] = ?,\n"
                 + "       [Price] = ?,\n"
                 + "       [Duration] = ?,\n"
-                + "       [IsActive] = ?,\n"
-                + "       [CreatedBy] = ?,\n"
-                + "       [CreatedDate] = ?\n"
+                + "       [IsActive] = ?\n"
                 + " WHERE ServiceID = ?";
         try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setString(1, service.getServiceName());
@@ -71,9 +75,7 @@ public class ServiceDao extends DBContext {
             ps.setBigDecimal(3, service.getPrice());
             ps.setInt(4, service.getDuration());
             ps.setBoolean(5, service.isIsActive());
-            ps.setInt(6, service.getCreatedBy());
-            ps.setTimestamp(7, service.getCreatedDate());
-            ps.setInt(8, service.getServiceId());
+            ps.setInt(6, service.getServiceId());
             int row = ps.executeUpdate();
             return row > 0;
         } catch (Exception e) {
@@ -98,7 +100,14 @@ public class ServiceDao extends DBContext {
                     service.setPrice(rs.getBigDecimal("Price"));
                     service.setDuration(rs.getInt("Duration"));
                     service.setIsActive(rs.getBoolean("IsActive"));
-                    service.setCreatedBy(rs.getInt("CreatedBy"));
+                    int createdById = rs.getInt("CreatedBy");
+                    if (!rs.wasNull()) {
+                        Users u = new Users();
+                        u.setUserId(createdById);
+                        service.setCreatedBy(u);
+                    } else {
+                        service.setCreatedBy(null);
+                    }
                     service.setCreatedDate(rs.getTimestamp("CreatedDate"));
                     return service;
                 }

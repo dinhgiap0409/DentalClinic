@@ -19,13 +19,13 @@ public class Service {
     private BigDecimal price;
     private int duration;
     private boolean isActive;
-    private int createdBy;
+    private Users createdBy;
     private Timestamp createdDate;
 
     public Service() {
     }
 
-    public Service(int serviceId, String serviceName, String description, BigDecimal price, int duration, boolean isActive, int createdBy, Timestamp createdDate) {
+    public Service(int serviceId, String serviceName, String description, BigDecimal price, int duration, boolean isActive, Users createdBy, Timestamp createdDate) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
         this.description = description;
@@ -84,11 +84,11 @@ public class Service {
         this.isActive = isActive;
     }
 
-    public int getCreatedBy() {
+    public Users getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(int createdBy) {
+    public void setCreatedBy(Users createdBy) {
         this.createdBy = createdBy;
     }
 
