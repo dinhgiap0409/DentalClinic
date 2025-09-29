@@ -6,6 +6,7 @@ package dal;
 
 import model.Doctor;
 import java.sql.*;
+import model.Users;
 
 /**
  *
@@ -34,7 +35,7 @@ public class DoctorDao extends DBContext {
                 + "           ,?\n"
                 + "           ,?)";
         try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, doctor.getUserId());
+            ps.setInt(1, doctor.getUserId().getUserId());
             ps.setString(2, doctor.getSpecialization());
             ps.setString(3, doctor.getLicenseNumber());
             ps.setInt(4, doctor.getYearsOfExperience());
@@ -71,7 +72,7 @@ public class DoctorDao extends DBContext {
                 + "       [ConsultationFee] = ?\n"
                 + " WHERE DoctorID = ?";
         try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, doctor.getUserId());
+            ps.setInt(1, doctor.getUserId().getUserId());
             ps.setString(2, doctor.getSpecialization());
             ps.setString(3, doctor.getLicenseNumber());
             ps.setInt(4, doctor.getYearsOfExperience());
@@ -96,7 +97,9 @@ public class DoctorDao extends DBContext {
                 if (rs.next()) {
                     Doctor doctor = new Doctor();
                     doctor.setDoctorID(rs.getInt("DoctorID"));
-                    doctor.setUserId(rs.getInt("UserID"));
+                    Users user = new Users();
+                    user.setUserId(rs.getInt("UserID"));
+                    doctor.setUserId(user);
                     doctor.setSpecialization(rs.getString("Specialization"));
                     doctor.setLicenseNumber(rs.getString("LicenseNumber"));
                     doctor.setYearsOfExperience(rs.getInt("YearsOfExperience"));

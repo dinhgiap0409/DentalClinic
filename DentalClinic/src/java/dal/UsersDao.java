@@ -111,7 +111,7 @@ public class UsersDao extends DBContext {
         }
         return null;
     }
-
+    
     public Users getUserById(int userId) {
         String sql = "SELECT [UserId], [Username], [PasswordHash], [Email], [FullName], "
                 + "       [PhoneNumber], [DateOfBirth], [Gender], [Address], [Role], "
