@@ -36,3 +36,7 @@ Thumbs.db
 # Ignore dependency caches
 .gradle/
 .mvn/
+/demo8/nbproject/private/
+/demo9/nbproject/private/
+/PRJ301_WS1_GiapNDHE194321/nbproject/private/
+/ PRJ301_WS1_GiapNDHE194321/nbproject/private/
