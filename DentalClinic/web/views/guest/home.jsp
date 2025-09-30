@@ -27,8 +27,8 @@
         <div class="hero">
             <h1>Dental Clinic</h1>
             <p>Dịch vụ nha khoa chuyên nghiệp</p>
-            <a href="/DentalClinic/user?action=login" class="btn">Đăng nhập</a>
-            <a href="/DentalClinic/user?action=register" class="btn">Đăng ký</a>
+            <a href="/DentalClinic/login" class="btn">Đăng nhập</a>
+            <a href="/DentalClinic/register" class="btn">Đăng ký</a>
         </div>
 
         <!-- Services Section -->

@@ -1,80 +1,73 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký - Dental Clinic</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 400px; margin: 20px auto; background: white; padding: 20px; border: 1px solid #ddd; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
-        .btn { background: #007bff; color: white; padding: 10px; border: none; cursor: pointer; width: 100%; }
-        .error { background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; }
-        .success { background: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; }
-        .text-center { text-align: center; }
-        a { color: #007bff; text-decoration: none; }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <jsp:include page="../../common/header.jsp"></jsp:include>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Resigter - Dental Clinic</title>
+    </head>
+    <body>
+        <!-- Header -->
+        <jsp:include page="../../common/header.jsp"></jsp:include>
 
-    <div class="container">
-        <h2 style="text-align: center;">Đăng ký</h2>
+        <div>
+            <h2 style="color: #0056b3; font-size: 40px; text-align: center"">Resigter</h2>
+            
+            <% if (request.getAttribute("error") != null) { %>
+                <div style="color: red; text-align: center; margin-bottom: 15px;">
+                    <%= request.getAttribute("error") %>
+                </div>
+            <% } %>
+            
+            <% if (request.getAttribute("success") != null) { %>
+                <div style="color: green; text-align: center; margin-bottom: 15px;">
+                    <%= request.getAttribute("success") %>
+                </div>
+            <% } %>
 
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error"><%= request.getAttribute("error") %></div>
-        <% } %>
+            <form action="register" method="POST">
+                <input type="hidden" name="action" value="register">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><label>UserName</label></td>
+                            <td><input type="text" name="username" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Email:</label></td>
+                            <td><input type="email" name="email" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>PassWord</label></td>
+                            <td><input type="password" name="password" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Full Name:</label></td>
+                            <td><input type="text" name="fullname" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Phone Number:</label></td>
+                            <td><input type="tel" name="phone" required></td>
+                        </tr>
+                        <tr>
+                            <td><label>Gender:</label></td>
+                            <td><select name="gender" required>
+                                    <option value="">Choose gender</option>
+                                    <option value="Nam">Male</option>
+                                    <option value="Nữ">Female</option>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td><button type="submit" class="btn">Register</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
 
-        <form action="user" method="POST">
-            <input type="hidden" name="action" value="register">
-            
-            <div class="form-group">
-                <label>Tên đăng nhập:</label>
-                <input type="text" name="username" required>
+            <div style="margin-top: 15px;">
+                <p>Already have an account ?<a href="/DentalClinic/login">Login</a></p>
             </div>
-            
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" name="email" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Mật khẩu:</label>
-                <input type="password" name="password" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Họ và tên:</label>
-                <input type="text" name="fullname" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Số điện thoại:</label>
-                <input type="tel" name="phone" required>
-            </div>
-            
-            <div class="form-group">
-                <label>Giới tính:</label>
-                <select name="gender" required>
-                    <option value="">Chọn giới tính</option>
-                    <option value="Nam">Nam</option>
-                    <option value="Nữ">Nữ</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn">Đăng ký</button>
-        </form>
-
-        <div class="text-center" style="margin-top: 15px;">
-            <p>Đã có tài khoản? <a href="/DentalClinic/user?action=login">Đăng nhập</a></p>
         </div>
-    </div>
 
-    <!-- Footer -->
-    <jsp:include page="../../common/footer.jsp"></jsp:include>
-</body>
+    </body>
 </html>

@@ -6,20 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng xuất - Dental Clinic</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 300px; margin: 100px auto; background: white; padding: 20px; border: 1px solid #ddd; text-align: center; }
-        .btn { background: #007bff; color: white; padding: 10px; text-decoration: none; margin: 5px; display: inline-block; }
-        .btn-secondary { background: #6c757d; }
-    </style>
 </head>
 <body>
     <!-- Header -->
     <jsp:include page="../../common/header.jsp"></jsp:include>
 
-    <div class="container">
-        <h2>Đăng xuất thành công!</h2>
-        <p>Cảm ơn bạn đã sử dụng dịch vụ</p>
+    <div>
+        <h2>Logout successful!</h2>
+        <p>Thank for using service</p>
         
         <div style="margin-top: 20px;">
             <a href="/DentalClinic/user?action=login" class="btn">Đăng nhập lại</a>
