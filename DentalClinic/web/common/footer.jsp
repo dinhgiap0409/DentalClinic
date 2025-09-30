@@ -1,37 +1,28 @@
-<%-- 
-    Document   : footer
-    Created on : Sep 17, 2025, 12:00:46 AM
-    Author     : Nguyen Dinh Giap
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<footer class="bg-gray-800 text-white py-8">
-    <div class="container mx-auto px-4">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<footer style="background: #333; color: white; padding: 20px; text-align: center; margin-top: 40px;">
+    <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-around; margin-bottom: 20px;">
             <div>
-                <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-                <p>123 Dental Street, Health City</p>
-                <p>Email: contact@dentalclinic.com</p>
-                <p>Phone: (123) 456-7890</p>
+                <h3 style="margin-bottom: 10px;">Dental Clinic</h3>
+                <p>Dịch vụ nha khoa chuyên nghiệp</p>
+                <p>Địa chỉ: 123 Đường ABC, Quận 1, TP.HCM</p>
+                <p>Điện thoại: (028) 1234-5678</p>
             </div>
             <div>
-                <h3 class="text-lg font-semibold mb-4">Operating Hours</h3>
-                <p>Mon - Fri: 8:00 AM - 6:00 PM</p>
-                <p>Sat: 9:00 AM - 3:00 PM</p>
-                <p>Sun: Closed</p>
+                <h3 style="margin-bottom: 10px;">Dịch vụ</h3>
+                <p>Khám răng tổng quát</p>
+                <p>Trám răng</p>
+                <p>Tẩy trắng răng</p>
+                <p>Niềng răng</p>
             </div>
             <div>
-                <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
-                <ul class="space-y-2">
-                    <li><a href="#services" class="hover:text-blue-300">Services</a></li>
-                    <li><a href="#book-appointment" class="hover:text-blue-300">Book Appointment</a></li>
-                    <li><a href="#login" class="hover:text-blue-300">Login</a></li>
-                    <li><a href="#register" class="hover:text-blue-300">Register</a></li>
-                </ul>
+                <h3 style="margin-bottom: 10px;">Liên hệ</h3>
+                <p>Email: info@dentalclinic.com</p>
+                <p>Giờ làm việc: 8:00 - 17:00</p>
+                <p>Thứ 2 - Chủ nhật</p>
             </div>
         </div>
-        <div class="mt-8 text-center">
-            <p>&copy; 2025 Dental Clinic. All rights reserved.</p>
-        </div>
+        <hr style="border: 1px solid #555; margin: 20px 0;">
+        <p>&copy; 2024 Dental Clinic. Tất cả quyền được bảo lưu.</p>
     </div>
 </footer>

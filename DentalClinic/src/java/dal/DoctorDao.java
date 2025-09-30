@@ -7,6 +7,8 @@ package dal;
 import model.Doctor;
 import java.sql.*;
 import model.Users;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,7 +16,7 @@ import model.Users;
  */
 public class DoctorDao extends DBContext {
 
-    private DoctorDao() {
+    public DoctorDao() {
     }
 
     public int insertDoctor(Doctor doctor) {
@@ -89,7 +91,7 @@ public class DoctorDao extends DBContext {
     }
 
     public Doctor getDoctorByID(int doctorId) {
-        String sql = "SELECT DoctorID, UserID, Specialization, LicenseNumber, YearsOfExperience, Education, Biography, ConsultationFee"
+        String sql = "SELECT DoctorID, UserID, Specialization, LicenseNumber, YearsOfExperience, Education, Biography, ConsultationFee "
                 + "FROM dbo.Doctors WHERE DoctorID = ?";
         try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
@@ -113,6 +115,57 @@ public class DoctorDao extends DBContext {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Doctor> getAllDoctors() {
+        String sql = "SELECT d.DoctorID, d.UserID, d.Specialization, d.LicenseNumber, " +
+                     "d.YearsOfExperience, d.Education, d.Biography, d.ConsultationFee, " +
+                     "u.FullName, u.Email, u.PhoneNumber " +
+                     "FROM dbo.Doctors d " +
+                     "INNER JOIN dbo.Users u ON d.UserID = u.UserID " +
+                     "ORDER BY d.DoctorID";
+        List<Doctor> doctors = new ArrayList<>();
+        
+        try (Connection connect = new DBContext().connection; 
+             PreparedStatement ps = connect.prepareStatement(sql)) {
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Doctor doctor = new Doctor();
+                    doctor.setDoctorID(rs.getInt("DoctorID"));
+                    doctor.setSpecialization(rs.getString("Specialization"));
+                    doctor.setLicenseNumber(rs.getString("LicenseNumber"));
+                    doctor.setYearsOfExperience(rs.getInt("YearsOfExperience"));
+                    doctor.setEducation(rs.getString("Education"));
+                    doctor.setBiography(rs.getString("Biography"));
+                    doctor.setConsultationFee(rs.getBigDecimal("ConsultationFee"));
+                    
+                    Users user = new Users();
+                    user.setUserId(rs.getInt("UserID"));
+                    user.setFullName(rs.getString("FullName"));
+                    user.setEmail(rs.getString("Email"));
+                    user.setPhoneNumber(rs.getString("PhoneNumber"));
+                    doctor.setUserId(user);
+                    
+                    doctors.add(doctor);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return doctors;
+    }
+
+    public boolean deleteDoctor(int doctorId) {
+        String sql = "DELETE FROM dbo.Doctors WHERE DoctorID = ?";
+        try (Connection connect = new DBContext().connection; 
+             PreparedStatement ps = connect.prepareStatement(sql)) {
+            ps.setInt(1, doctorId);
+            int row = ps.executeUpdate();
+            return row > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -13,7 +13,7 @@ import model.Users;
  */
 public class UsersDao extends DBContext {
 
-    private UsersDao() {
+    public UsersDao() {
     }
 
     public int insertUser(Users user) {
