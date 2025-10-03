@@ -1,22 +1,16 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.Service"%>
+<%@page import="model.Users"%>
+<%@page import="java.text.NumberFormat"%>
+<%@page import="java.util.Locale"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dental Clinic - Home</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .hero { background: white; padding: 40px; text-align: center; margin: 20px 0; border: 1px solid #ddd; }
-        .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0; }
-        .service { background: white; padding: 20px; border: 1px solid #ddd; }
-        .btn { background: #007bff; color: white; padding: 10px 20px; text-decoration: none; margin: 5px; }
-        .btn:hover { background: #0056b3; }
-        h1 { color: #333; }
-        h2 { color: #333; margin-top: 30px; }
-        h3 { color: #333; }
-    </style>
+    <link rel="stylesheet" href="/DentalClinic/css/home.css">
 </head>
 <body>
     <!-- Header -->
@@ -27,34 +21,33 @@
         <div class="hero">
             <h1>Dental Clinic</h1>
             <p>Dịch vụ nha khoa chuyên nghiệp</p>
-            <a href="/DentalClinic/login" class="btn">Đăng nhập</a>
-            <a href="/DentalClinic/register" class="btn">Đăng ký</a>
+            <%
+                Users currentUser = (Users) session.getAttribute("user");
+                if (currentUser != null) {
+            %>
+                <p class="welcome-message">Chào mừng, <strong><%= currentUser.getFullName() %></strong>!</p>
+                <a href="/DentalClinic/service" class="btn">Xem dịch vụ</a>
+                <% if ("admin".equals(currentUser.getRole())) { %>
+                    <a href="/DentalClinic/dashboard" class="btn">Quản lý</a>
+                <% } %>
+            <%
+                } else {
+            %>
+                <a href="/DentalClinic/login" class="btn">Đăng nhập</a>
+                <a href="/DentalClinic/register" class="btn">Đăng ký</a>
+            <%
+                }
+            %>
         </div>
 
         <!-- Services Section -->
-        <h2>Dịch vụ</h2>
-        <div class="services">
-            <div class="service">
-                <img src="/DentalClinic/img/dept-1.jpg" alt="Khám răng" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 15px;">
-                <h3>Khám răng</h3>
-                <p>Kiểm tra sức khỏe răng miệng</p>
-            </div>
-            <div class="service">
-                <img src="/DentalClinic/img/dept-2.jpg" alt="Trám răng" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 15px;">
-                <h3>Trám răng</h3>
-                <p>Điều trị sâu răng</p>
-            </div>
-            <div class="service">
-                <img src="/DentalClinic/img/dept-3.jpg" alt="Tẩy trắng" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 15px;">
-                <h3>Tẩy trắng</h3>
-                <p>Làm trắng răng</p>
-            </div>
-            <div class="service">
-                <img src="/DentalClinic/img/dept-4.jpg" alt="Niềng răng" style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 15px;">
-                <h3>Niềng răng</h3>
-                <p>Chỉnh nha</p>
-            </div>
-        </div>
+        <h2>Dental Services</h2>
+        
+        <!-- Services Component -->
+        <jsp:include page="services-section.jsp"></jsp:include>
+
+        <!-- Pagination Component -->
+        <jsp:include page="pagination-section.jsp"></jsp:include>
 
         <!-- Doctors Section -->
         <h2>Bác sĩ</h2>
@@ -76,5 +69,7 @@
 
     <!-- Footer -->
     <jsp:include page="../../common/footer.jsp"></jsp:include>
+
+    <script src="/DentalClinic/js/home.js"></script>
 </body>
 </html>

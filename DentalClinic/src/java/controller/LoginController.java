@@ -23,7 +23,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("views/customer/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/views/customer/login.jsp").forward(request, response);
     }
 
     @Override
@@ -41,11 +41,11 @@ public class LoginController extends HttpServlet {
                 response.sendRedirect("home");
             } else {
                 request.setAttribute("error", "Email or password error!");
-                request.getRequestDispatcher("views/customer/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/views/customer/login.jsp").forward(request, response);
             }
         } else {
             request.setAttribute("error", "Please input full information!");
-            request.getRequestDispatcher("views/customer/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/customer/login.jsp").forward(request, response);
         }
     }
 

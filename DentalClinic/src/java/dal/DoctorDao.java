@@ -155,17 +155,4 @@ public class DoctorDao extends DBContext {
         return doctors;
     }
 
-    public boolean deleteDoctor(int doctorId) {
-        String sql = "DELETE FROM dbo.Doctors WHERE DoctorID = ?";
-        try (Connection connect = new DBContext().connection; 
-             PreparedStatement ps = connect.prepareStatement(sql)) {
-            ps.setInt(1, doctorId);
-            int row = ps.executeUpdate();
-            return row > 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
 }
