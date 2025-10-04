@@ -2,17 +2,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package filter;
+package dto;
 import java.sql.*;
 
 /**
  *
  * @author Nguyen Dinh Giap
  */
-public class ScheduleFilter {
+public class ScheduleDto {
     //su dung wrapper mac dinh = null 
     //khi nguoi dung ko truyen dieu kien thi tra ve null
-    private Integer doctorId;
+    private Integer doctorId; 
     private Integer dayOfWeek;
     private Time startTime;
     private Time endTime;
@@ -20,7 +20,7 @@ public class ScheduleFilter {
     private Integer maxAppointment;
     private Date validFrom;
     private Date validTo;
-    private Boolean requiresApproval;
+    private Boolean requiresApproval; 
     private Boolean isApproved;
     private Integer approvedBy;
     private Timestamp approvedDate;
@@ -32,10 +32,10 @@ public class ScheduleFilter {
     private int page = 1;
     private int size = 10;
 
-    public ScheduleFilter() {
+    public ScheduleDto() {
     }
 
-    public ScheduleFilter(Integer doctorId, Integer dayOfWeek, Time startTime, Time endTime, Boolean isAvailable, Integer maxAppointment, Date validFrom, Date validTo, Boolean requiresApproval, Boolean isApproved, Integer approvedBy, Timestamp approvedDate, Timestamp createdDate, boolean sortMode, boolean paginationMode) {
+    public ScheduleDto(Integer doctorId, Integer dayOfWeek, Time startTime, Time endTime, Boolean isAvailable, Integer maxAppointment, Date validFrom, Date validTo, Boolean requiresApproval, Boolean isApproved, Integer approvedBy, Timestamp approvedDate, Timestamp createdDate, boolean sortMode, boolean paginationMode) {
         this.doctorId = doctorId;
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;

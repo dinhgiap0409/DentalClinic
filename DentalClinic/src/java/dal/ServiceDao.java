@@ -5,7 +5,7 @@
 package dal;
 
 import dto.ServiceDto;
-import filter.ServiceFilter;
+import dto.ServiceDto;
 import java.math.BigDecimal;
 import java.sql.*;
 import model.Doctor;
@@ -224,7 +224,7 @@ public class ServiceDao extends DBContext {
         return getServiceById(id);
     }
 
-    public List<ServiceDto> filterService(ServiceFilter filter) {
+    public List<ServiceDto> filterService(ServiceDto filter) {
         List<ServiceDto> list = new ArrayList<>();
         //cau lenh sql truy van join 3 bang user, doctor, service
         //lay thong tin ve cac dich vu, nguoi tao dich vu va thong tin doctor lien quanl

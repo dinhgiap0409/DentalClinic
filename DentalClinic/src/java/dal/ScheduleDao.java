@@ -4,7 +4,7 @@
  */
 package dal;
 
-import filter.ScheduleFilter;
+import dto.ScheduleDto;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import model.Users;
  */
 public class ScheduleDao extends DBContext {
 
-    //ham lay lich theo id
+    //ham lay lich trinh theo id
     public Schedules getScheduleById(int scheduleId) {
         //cau lenh sql lay du lieu tu bang schedule
         String sql = """
@@ -80,7 +80,7 @@ public class ScheduleDao extends DBContext {
         return null;
     }
 
-    public List<Schedules> filterSchedules(ScheduleFilter f) {
+    public List<Schedules> filterSchedules(ScheduleDto f) {
         List<Schedules> list = new ArrayList<>();
         StringBuilder sql = new StringBuilder(("""
         SELECT ScheduleID, DoctorID, DayOfWeek, StartTime, EndTime,

@@ -4,7 +4,7 @@
  */
 package dal;
 
-import filter.ScheduleExceptionsFilter;
+import dto.ScheduleExceptionsDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -43,7 +43,7 @@ public class ScheduleExceptionsDao extends DBContext {
         return null;
     }
 
-    public List<ScheduleExceptions> filterScheduleExceptions(ScheduleExceptionsFilter f) {
+    public List<ScheduleExceptions> filterScheduleExceptions(ScheduleExceptionsDto f) {
         List<ScheduleExceptions> list = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder("""

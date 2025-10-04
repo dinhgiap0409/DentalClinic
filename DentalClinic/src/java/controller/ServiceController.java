@@ -6,9 +6,7 @@ package controller;
 
 import dal.ServiceDao;
 import dto.ServiceDto;
-import filter.ServiceFilter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -30,7 +28,7 @@ public class ServiceController extends HttpServlet {
             throws ServletException, IOException {
         
         // Tạo filter mặc định để hiển thị tất cả services
-        ServiceFilter filter = new ServiceFilter();
+        ServiceDto filter = new ServiceDto();
         filter.setPaginationMode(true);
         filter.setSortMode(true);
         filter.setPage(1);
@@ -69,7 +67,7 @@ public class ServiceController extends HttpServlet {
         int size = 2;
         
         // tao filter
-        ServiceFilter filter = new ServiceFilter();
+        ServiceDto filter = new ServiceDto();
         filter.setServiceName(serviceName);
         
         // Set gia tien

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package filter;
+package dto;
 
 import java.sql.*;
 
@@ -10,7 +10,7 @@ import java.sql.*;
  *
  * @author Nguyen Dinh Giap
  */
-public class ScheduleExceptionsFilter {
+public class ScheduleExceptionsDto {
 
     private Integer DoctorId;
     private Date exceptionDate;
@@ -23,10 +23,10 @@ public class ScheduleExceptionsFilter {
     private int page = 1;
     private int size = 10;
 
-    public ScheduleExceptionsFilter() {
+    public ScheduleExceptionsDto() {
     }
 
-    public ScheduleExceptionsFilter(Integer DoctorId, Date exceptionDate, Boolean isWorkingDay, Time startTime, Time endTime, Integer maxAppointment, boolean sortMode, boolean paginationMode) {
+    public ScheduleExceptionsDto(Integer DoctorId, Date exceptionDate, Boolean isWorkingDay, Time startTime, Time endTime, Integer maxAppointment, boolean sortMode, boolean paginationMode) {
         this.DoctorId = DoctorId;
         this.exceptionDate = exceptionDate;
         this.isWorkingDay = isWorkingDay;
