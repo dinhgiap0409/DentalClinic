@@ -26,7 +26,7 @@ public class ResigterController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
-         request.getRequestDispatcher("views/customer/register.jsp").forward(request, response);
+         request.getRequestDispatcher("/views/customer/register.jsp").forward(request, response);
     } 
 
     @Override
@@ -50,7 +50,7 @@ public class ResigterController extends HttpServlet {
             request.getRequestDispatcher("views/customer/login.jsp").forward(request, response);
         } else {
             request.setAttribute("error", "Resigter fail! Email or username existed.");
-            request.getRequestDispatcher("views/customer/register.jsp").forward(request, response);
+            request.getRequestDispatcher("/views/customer/register.jsp").forward(request, response);
         }
     }
 

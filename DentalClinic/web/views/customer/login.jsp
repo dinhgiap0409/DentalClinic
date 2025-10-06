@@ -38,7 +38,6 @@
                 </tbody>
             </table>
         </form>
-
         <div class="text-center" style="margin-top: 15px;">
             <p>Do you have an account? <a href="/DentalClinic/user?action=register">Resigter</a></p>
         </div>
