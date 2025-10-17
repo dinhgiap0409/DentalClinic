@@ -12,6 +12,7 @@ import model.Appointments;
 import model.Patients;
 import model.Doctor;
 import model.Service;
+import model.Users;
 
 /**
  *
@@ -252,6 +253,64 @@ public class AppointmentsDao extends DBContext {
         } catch (SQLException e) {
             return true; 
         }
+    }
+     /**
+     * Lấy danh sách lịch sử các cuộc hẹn đã hoàn thành của một bệnh nhân.
+     * Hàm này truy vấn kèm tên bác sĩ và tên dịch vụ để hiển thị.
+     * @param patientId ID của bệnh nhân.
+     * @return Một List chứa thông tin cơ bản của các lần khám.
+     */
+    public List<Appointments> getAppointmentHistoryByPatientId(int patientId) {
+        List<Appointments> history = new ArrayList<>();
+        // Câu lệnh SQL JOIN các bảng để lấy thông tin cần thiết trong một lần truy vấn
+        String sql = """
+            SELECT 
+                a.AppointmentID, a.AppointmentDate, a.StartTime, a.Status, a.Notes,
+                s.ServiceName,
+                u.FullName AS DoctorName,
+                d.DoctorID,
+                s.ServiceID
+            FROM dbo.Appointments a
+            JOIN dbo.Services s ON a.ServiceID = s.ServiceID
+            JOIN dbo.Doctors d ON a.DoctorID = d.DoctorID
+            JOIN dbo.Users u ON d.UserID = u.UserID
+            WHERE a.PatientID = ? AND a.Status = 'Completed'
+            ORDER BY a.AppointmentDate DESC, a.StartTime DESC
+        """;
+
+        try (Connection conn = new DBContext().connection; PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, patientId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Appointments appointment = new Appointments();
+                    appointment.setAppointmentId(rs.getInt("AppointmentID"));
+                    appointment.setAppointmentDate(rs.getDate("AppointmentDate"));
+                    appointment.setStartTime(rs.getTime("StartTime"));
+                    appointment.setStatus(rs.getString("Status"));
+                    appointment.setNotes(rs.getString("Notes"));
+
+                    // Set thông tin Service (Dịch vụ)
+                    Service service = new Service();
+                    service.setServiceId(rs.getInt("ServiceID"));
+                    service.setServiceName(rs.getString("ServiceName"));
+                    appointment.setServiceId(service);
+
+                    // Set thông tin Doctor (Bác sĩ)
+                    Doctor doctor = new Doctor();
+                    doctor.setDoctorID(rs.getInt("DoctorID"));
+                    Users doctorUser = new Users();
+                    doctorUser.setFullName(rs.getString("DoctorName"));
+                    doctor.setUserId(doctorUser);
+                    appointment.setDoctorId(doctor);
+                    
+                    history.add(appointment);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return history;
     }
 
 }

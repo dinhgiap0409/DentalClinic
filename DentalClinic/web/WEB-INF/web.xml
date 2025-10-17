@@ -16,10 +16,6 @@
         <servlet-name>resigterController</servlet-name>
         <servlet-class>controller.ResigterController</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>serviceController</servlet-name>
-        <servlet-class>controller.ServiceController</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>HomeController</servlet-name>
         <url-pattern>/home</url-pattern>
@@ -35,10 +31,6 @@
     <servlet-mapping>
         <servlet-name>resigterController</servlet-name>
         <url-pattern>/register</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>serviceController</servlet-name>
-        <url-pattern>/services</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
