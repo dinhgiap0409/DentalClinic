@@ -2,6 +2,7 @@ package controller;
 
 import dal.AppointmentsDao;
 import dal.DoctorDao;
+import dal.NotificationsDao;
 import dal.PatientDao;
 import dal.ServiceDao;
 
@@ -26,9 +27,10 @@ import model.Users;
 public class AppointmentController extends HttpServlet {
 
     private final AppointmentsDao apptDao = new AppointmentsDao();
-    private final DoctorDao doctorDao     = new DoctorDao();
-    private final PatientDao patientDao   = new PatientDao();
-    private final ServiceDao serviceDao   = new ServiceDao();
+    private final DoctorDao doctorDao = new DoctorDao();
+    private final PatientDao patientDao = new PatientDao();
+    private final ServiceDao serviceDao = new ServiceDao();
+    private final NotificationsDao notiDao = new NotificationsDao();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -63,10 +65,10 @@ public class AppointmentController extends HttpServlet {
                 return;
             }
             // Lấy dữ liệu từ form
-            int doctorId  = Integer.parseInt(req.getParameter("doctorId"));
+            int doctorId = Integer.parseInt(req.getParameter("doctorId"));
             int serviceId = Integer.parseInt(req.getParameter("serviceId"));
-            Date date     = Date.valueOf(req.getParameter("date"));
-            Time start    = Time.valueOf(req.getParameter("startTime") + ":00");
+            Date date = Date.valueOf(req.getParameter("date"));
+            Time start = Time.valueOf(req.getParameter("startTime") + ":00");
 
             // Lấy dịch vụ để biết duration
             Service svc = serviceDao.getServiceById(serviceId);
@@ -76,7 +78,7 @@ public class AppointmentController extends HttpServlet {
                 return;
             }
             int duration = (svc.getDuration() > 0) ? svc.getDuration() : 30;
-            Time end     = new Time(start.getTime() + duration * 60L * 1000L);
+            Time end = new Time(start.getTime() + duration * 60L * 1000L);
 
             //  CHECK TRÙNG LỊCH bằng existsDoctorTimeConflict trước khi insert
             boolean conflict = apptDao.existsDoctorTimeConflict(doctorId, date, start, end);
@@ -110,6 +112,28 @@ public class AppointmentController extends HttpServlet {
             if (newId != null) {
                 req.setAttribute("successMessage", "Bạn đã đặt lịch hẹn thành công!");
                 req.setAttribute("apptId", newId);
+                // Lấy UserID của bệnh nhân (đã đăng nhập)
+                Integer patientUserId = currentUser.getUserId();
+
+                // Lấy UserID của bác sĩ từ DoctorID 
+                Integer doctorUserId = null;
+                try {
+                    doctorUserId = doctorDao.getUserIdByDoctorId(doctorId);
+                } catch (Exception ignored) {
+                }
+
+                // Chuẩn bị nội dung
+                String msg = req.getParameter("startTime");
+                String msgForPatient = "Bạn đã đặt lịch với bác sĩ ID=" + doctorId + " vào ngày " + date + " lúc " + msg + ".";
+                String msgForDoctor = "Có lịch hẹn mới của bệnh nhân ID=" + patient.getPatientID()
+                        + " vào " + date + " lúc " + msg + " (ServiceID=" + serviceId + ").";
+
+                if (patientUserId != null) {
+                    notiDao.insert(patientUserId, "Đặt lịch hẹn", msgForPatient, "Appointment");
+                }
+                if (doctorUserId != null) {
+                    notiDao.insert(doctorUserId, "Lịch hẹn mới", msgForDoctor, "Appointment");
+                }
                 req.getRequestDispatcher("/views/appointment/confirm.jsp").forward(req, resp);
             } else {
                 req.setAttribute("error", "Không thể đặt lịch. Vui lòng thử thời gian khác.");
