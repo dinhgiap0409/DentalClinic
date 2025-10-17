@@ -3,24 +3,7 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/model/ScheduleExceptions.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dto/ScheduleExceptionsDto.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/model/Appointments.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dto/AppointmentDto.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/UsersDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/ScheduleExceptionsDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/DBContext.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/AppointmentsDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/controller/HomeController.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/controller/ServiceController.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dto/ServiceDto.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/DoctorDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/ScheduleDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/model/MedicalRecords.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dal/ServiceDao.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/model/Schedules.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/dto/ScheduleDto.java</file>
-            <file>file:/D:/PRJ301/project_prj/DentalClinic/DentalClinic/src/java/model/Doctor.java</file>
+            <file>file:/D:/WED_PE/DentalClinic/DentalClinic/src/java/controller/AppointmentController.java</file>
         </group>
     </open-files>
 </project-private>
