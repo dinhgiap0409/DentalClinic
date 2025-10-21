@@ -11,9 +11,10 @@ import java.sql.Time;
  * @author Nguyen Dinh Giap
  */
 public class TimeSlotDto {
+
     private Time startTime;
     private Time endTime;
-    private boolean available; // Always true for available slots in this DTO
+    private boolean available;
 
     public TimeSlotDto(Time startTime, Time endTime, boolean available) {
         this.startTime = startTime;
@@ -21,14 +22,29 @@ public class TimeSlotDto {
         this.available = available;
     }
 
-    public Time getStartTime() { return startTime; }
-    public void setStartTime(Time startTime) { this.startTime = startTime; }
+    public Time getStartTime() {
+        return startTime;
+    }
 
-    public Time getEndTime() { return endTime; }
-    public void setEndTime(Time endTime) { this.endTime = endTime; }
+    public void setStartTime(Time startTime) {
+        this.startTime = startTime;
+    }
 
-    public boolean isAvailable() { return available; }
-    public void setAvailable(boolean available) { this.available = available; }
+    public Time getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Time endTime) {
+        this.endTime = endTime;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
     @Override
     public String toString() {

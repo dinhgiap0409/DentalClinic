@@ -2,6 +2,16 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/ScheduleExceptionsDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/ResigterController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/AppropriateSpecialistController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/DoctorWorkScheduleController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/TimeSlotDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/DBContext.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/ScheduleDao.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/CustomersBookSchedulesController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/ServiceDto.java</file>
+        </group>
     </open-files>
 </project-private>

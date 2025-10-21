@@ -5,12 +5,15 @@
 package controller;
 
 import dal.ServiceDao;
+import dal.DoctorDao;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
+import model.Doctor;
 
 /**
  *
@@ -20,6 +23,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class HomeController extends HttpServlet {
 
     private ServiceDao serviceDao = new ServiceDao();
+    private final DoctorDao doctorDao = new DoctorDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -47,6 +51,10 @@ public class HomeController extends HttpServlet {
         request.setAttribute("currentPage", page);
         request.setAttribute("totalPages", totalPages);
         request.setAttribute("size", size);
+
+        // Lấy danh sách bác sĩ từ database
+        List<Doctor> doctors = doctorDao.getAllDoctors();
+        request.setAttribute("doctors", doctors);
 
         request.getRequestDispatcher("/views/guest/home.jsp").forward(request, response);
     }

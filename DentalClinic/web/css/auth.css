@@ -1,0 +1,254 @@
+/*
+    CSS for Login/Register Page
+*/
+
+body.auth-page {
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    background: #F5F5F5;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+/* Background images */
+#fback {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.girisback { /* Login background */
+    position: absolute;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: #03A9F4 url(../img/signup-bg.jpg); /* Placeholder image */
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+.kayitback { /* Register background */
+    position: absolute;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: #03A9F4 url(../img/login-bg.png); /* Placeholder image */
+    background-size: cover;
+    background-position: 50% 50%;
+}
+
+/* Main container for forms */
+#textbox {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    margin-left: 50%;
+    position: absolute;
+    z-index: 2;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.toplam {
+    width: 200%;
+    height: 100%;
+    position: relative;
+    left: -100%; /* Start with login form visible */
+}
+
+.left, .right {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+}
+
+.left { /* Register form container */
+    background: #2C3034;
+    left: 0;
+}
+
+.right { /* Login form container */
+    background: #F9F9F9;
+    right: 0;
+}
+
+/* Inner content alignment */
+#ic {
+    width: 80%;
+    max-width: 300px;
+    margin: 0 auto;
+    top: 50%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#ic h2 {
+    font-size: 30px;
+    font-weight: 300;
+    color: #03A9F4;
+    margin-bottom: 10px;
+}
+
+#ic p {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 26px;
+    color: #757575;
+    margin-bottom: 30px;
+}
+
+/* Form styling */
+form#girisyap {
+    width: 100%;
+}
+
+form#girisyap input[type="text"],
+form#girisyap input[type="email"],
+form#girisyap input[type="password"] {
+    border-bottom: 1px solid #cdcdcd;
+    color: #959595;
+    font-size: 14px;
+    width: 100%;
+    resize: none;
+    height: 30px;
+    outline: 0;
+    border-left: 0;
+    border-right: 0;
+    padding: 8px 0;
+    background: none;
+    border-top: 0;
+    overflow: hidden;
+    transition: border .2s;
+    -webkit-transition: border .2s;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    height: 55px;
+}
+
+.control-label {
+    display: block; /* Hiển thị label trên một dòng riêng */
+    font-size: 14px; /* Kích thước chữ cho label */
+    font-weight: 400;
+    color: #959595; /* Màu chữ cho label */
+    margin-bottom: 5px; /* Khoảng cách giữa label và input */
+}
+
+.form-group.focused .control-label,
+.form-group.has-value .control-label {
+    /* Xóa các thuộc tính cũ để loại bỏ hiệu ứng */
+    transform: none;
+    color: #959595 !important; /* Giữ màu chữ nhất quán */
+}
+
+/* Register form specific styles */
+.left form#girisyap input {
+    border-bottom: 1px solid #45494C;
+    color: #eee;
+}
+
+.left .control-label {
+    color: #bbb; /* Màu chữ label cho form tối màu */
+}
+
+.left .yarim {
+    width: 48%;
+    float: left;
+}
+
+.left .yarim.sn {
+    float: right;
+}
+
+/* Buttons */
+.girisbtn {
+    width: auto;
+    float: right;
+    background: #03A9F4;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin: 0 !important;
+    line-height: 16px;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    height: 36px;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.1);
+    transition: background-color 0.25s, box-shadow 0.25s;
+    border: 0;
+}
+
+.girisbtn:hover {
+    background: #0288D1;
+    box-shadow: 0 4px 7px rgba(0,0,0,0.1), 0 3px 6px rgba(0,0,0,0.1);
+}
+
+#moveleft, #moveright {
+    width: auto;
+    float: right;
+    background: none;
+    padding: 10px 16px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    color: #03A9F4;
+    font-weight: 600;
+    margin: 0 10px !important;
+    line-height: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    height: 36px;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
+    transition: background-color 0.25s;
+    border: 0;
+    outline: 0;
+}
+
+#moveleft:hover { /* Switch to Register */
+    background: #eee;
+}
+
+#moveright:hover { /* Switch to Login */
+    background: #363A3D;
+}
+
+/* Alert messages for errors */
+.alert {
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    text-align: center;
+    clear: both;
+    float: left;
+    width: 100%;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.left .alert-danger {
+    background-color: #583033;
+    color: #f8d7da;
+    border: 1px solid #721c24;
+}
+
+/* Clearfix for floated elements */
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}

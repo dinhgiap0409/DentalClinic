@@ -5,8 +5,10 @@
 package controller.BookAppointment;
 
 import dal.AppointmentsDao;
+import dal.DoctorDao;
 import dal.NotificationsDao;
 import dal.PatientDao;
+import dal.UsersDao;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -19,6 +21,7 @@ import model.Appointments;
 import model.Doctor;
 import model.Patients;
 import model.Service;
+import model.Users;
 
 /**
  *
@@ -36,24 +39,60 @@ public class CustomersBookSchedulesController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            // neu ma nguoi dung an dat lich , check xem nguoi dung da co thong tin nhu nhom mau, tien su,, ton tai trong bang Patient hay chua
-            // neu co thong tin dat binh thuong
-            // neu ko co thi dieu den trang view profile cua ho de cap nhat thong tin
-    
+        try {    
             request.setCharacterEncoding("UTF-8");
             response.setCharacterEncoding("UTF-8");
+            HttpSession session = request.getSession();
+
+            // 1. Lấy thông tin người dùng đang đăng nhập từ session
+            Users user = (Users) session.getAttribute("user");
+            if (user == null) {
+                // Nếu chưa đăng nhập, chuyển về trang đăng nhập
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            // 2. Dùng UserID để lấy thông tin bệnh án (Patient Profile)
+            PatientDao patientDAO = new PatientDao();
+            Patients patient = patientDAO.getPatientByUserId(user.getUserId());
+
+            // 3. Kiểm tra và tạo hồ sơ bệnh nhân nếu chưa có
+            if (patient == null) {
+                // Tạo hồ sơ bệnh nhân mới
+                Patients newPatient = new Patients();
+                newPatient.setUserID(user);
+                
+                boolean created = patientDAO.insertPatient(newPatient);
+                if (!created) {
+                    request.setAttribute("error", "Không thể tạo hồ sơ bệnh nhân. Vui lòng thử lại!");
+                    request.getRequestDispatcher("/error.jsp").forward(request, response);
+                    return;
+                }
+                
+                // Lấy lại thông tin patient vừa tạo
+                patient = patientDAO.getPatientByUserId(user.getUserId());
+            }
+
+            // 4. Kiểm tra thông tin quan trọng còn thiếu
+            boolean missingInfo = (patient.getBloodType() == null || patient.getBloodType().trim().isEmpty()
+                    || patient.getMedicalHistory() == null || patient.getMedicalHistory().trim().isEmpty());
+
+            if (missingInfo) {
+                session.setAttribute("success", "Vui lòng cập nhật đầy đủ thông tin bệnh án (Nhóm máu, Tiền sử bệnh) trước khi đặt lịch.");
+                response.sendRedirect(request.getContextPath() + "/profile");
+                return;
+            }
 
             //Lấy thông tin từ form đặt lịch (client gửi lên)
-            //int patientId = Integer.parseInt(request.getParameter("patientId"));
-            int patientId = 3;
-            
+            // Lấy patientId động từ đối tượng patient đã được kiểm tra ở trên
+            int patientId = patient.getPatientID();
+
             int doctorId = Integer.parseInt(request.getParameter("doctorId"));
             int serviceId = Integer.parseInt(request.getParameter("serviceId"));
             String dateStr = request.getParameter("appointmentDate");
             String slot = request.getParameter("slot");
             String notes = request.getParameter("notes");
-            
+
             if (slot == null || !slot.contains("-")) {
                 request.setAttribute("error", "Dữ liệu khung giờ không hợp lệ.");
                 request.getRequestDispatcher("/error.jsp").forward(request, response);
@@ -64,12 +103,12 @@ public class CustomersBookSchedulesController extends HttpServlet {
             String[] timeParts = slot.split("-");
             String startStr = timeParts[0].trim();
             String endStr = timeParts[1].trim();
-            
+
             // ===== Parse sang SQL types =====
             java.sql.Date appointmentDate = java.sql.Date.valueOf(dateStr);
             java.sql.Time startTime = java.sql.Time.valueOf(startStr);
             java.sql.Time endTime = java.sql.Time.valueOf(endStr);
-            
+
             // Tạo đối tượng Appointments
             Appointments a = new Appointments();
             a.setPatientId(new Patients(patientId));
@@ -82,8 +121,8 @@ public class CustomersBookSchedulesController extends HttpServlet {
             a.setStatus("Scheduled");
 
             //Gọi DAO insertAppointment()
-            AppointmentsDao appointmentDAO = new AppointmentsDao();
-            Integer newId = appointmentDAO.insertAppointment(a);
+            AppointmentsDao appointmentsDao = new AppointmentsDao();
+            Integer newId = appointmentsDao.insertAppointment(a);
 
             if (newId == null) {
                 //Lỗi (bác sĩ bận hoặc dữ liệu sai)
@@ -95,24 +134,36 @@ public class CustomersBookSchedulesController extends HttpServlet {
             //Gửi thông báo (Patient & Doctor)
             NotificationsDao notiDAO = new NotificationsDao();
 
-            //Thông tin bác sĩ / bệnh nhân theo ID:
-            String doctorName = "Bác sĩ #" + doctorId;
-            String patientName = "Bệnh nhân #" + patientId;
+            // Lấy thông tin đầy đủ của bác sĩ để gửi thông báo
+            DoctorDao doctorDao = new DoctorDao();
+            Doctor doctor = doctorDao.getDoctorByID(doctorId);
+            String doctorName = "Bác sĩ không xác định";
+            Integer doctorUserId = null;
+
+            if (doctor != null && doctor.getUserId() != null) {
+                doctorName = doctor.getUserId().getFullName();
+                doctorUserId = doctor.getUserId().getUserId();
+            }
+
+            // Lấy tên bệnh nhân từ đối tượng user đã có
+            String patientName = user.getFullName();
             String messageForPatient = "Bạn đã đặt lịch khám với " + doctorName
                     + " vào ngày " + dateStr + " lúc " + startStr + ".";
             String messageForDoctor = patientName + " đã đặt lịch khám vào ngày "
                     + dateStr + " lúc " + startStr + ".";
 
-            notiDAO.insert(patientId, "Xác nhận đặt lịch", messageForPatient, "Appointment");
-            notiDAO.insert(doctorId, "Lịch hẹn mới", messageForDoctor, "Appointment");
+            notiDAO.insert(user.getUserId(), "Xác nhận đặt lịch", messageForPatient, "Appointment");
+            if (doctorUserId != null) {
+                notiDAO.insert(doctorUserId, "Lịch hẹn mới", messageForDoctor, "Appointment");
+            }
 
             // Gửi về trang xác nhận thành công
             request.setAttribute("appointmentId", newId);
             request.getRequestDispatcher("/appointment-success.jsp").forward(request, response);
 
         } catch (Exception e) {
-            
-            request.setAttribute("error", "Đã xảy ra lỗi trong quá trình đặt lịch.");
+            e.printStackTrace(); // In lỗi ra console để debug
+            request.setAttribute("error", "Đã xảy ra lỗi không mong muốn trong quá trình đặt lịch.");
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
 
