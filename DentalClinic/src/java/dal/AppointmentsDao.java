@@ -175,14 +175,6 @@ public class AppointmentsDao extends DBContext {
         if (!a.getEndTime().after(a.getStartTime())) {
             return null;
         }
-
-        // check trung lap voi bac si
-        if (existsDoctorTimeConflict(a.getDoctorId().getDoctorID(), a.getAppointmentDate(),
-                a.getStartTime(), a.getEndTime())) {
-            //trung lap ve thoi gian
-            return null;
-
-        }
         String sql = """
         INSERT INTO dbo.Appointments
             (PatientID, DoctorID, ServiceID,
@@ -217,6 +209,7 @@ public class AppointmentsDao extends DBContext {
             return null;
 
         } catch (java.sql.SQLException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -224,34 +217,27 @@ public class AppointmentsDao extends DBContext {
     //ham check trung lap khoang thoi gian
     public boolean existsDoctorTimeConflict(int doctorId, Date appointmentDate,
             Time newStartTime, Time newEndTime) {
-        //check trung lap trung dau, trung giua va trung cuoi
         String sql = """
         SELECT 1
         FROM dbo.Appointments
         WHERE DoctorID = ? AND AppointmentDate = ? 
         AND Status != 'Cancelled'
-        AND (
-            (StartTime < ? AND EndTime > ?) OR  
-            (StartTime < ? AND EndTime > ?) OR   
-            (StartTime >= ? AND EndTime <= ?)  
-        )
+        AND StartTime < ? AND ? < EndTime
+        AND StartTime < ? AND ? < EndTime -- StartTime < newEndTime AND newStartTime < EndTime
     """;
         try (Connection cn = new DBContext().connection; PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
             ps.setDate(2, appointmentDate);
-            ps.setTime(3, newEndTime);    
-            ps.setTime(4, newStartTime);  
-            ps.setTime(5, newEndTime);     
-            ps.setTime(6, newStartTime);  
-            ps.setTime(7, newStartTime);  
-            ps.setTime(8, newEndTime);    
-
+            ps.setTime(3, newEndTime);
+            ps.setTime(4, newStartTime);
+            ps.setTime(5, newEndTime);
+            ps.setTime(6, newStartTime);
             try (ResultSet rs = ps.executeQuery()) {
-                //co trung lap
                 return rs.next();
             }
         } catch (SQLException e) {
-            return true; 
+            e.printStackTrace();
+            return true;
         }
     }
      /**

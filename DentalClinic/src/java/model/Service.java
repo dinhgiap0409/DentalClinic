@@ -25,6 +25,10 @@ public class Service {
     public Service() {
     }
 
+    public Service(int serviceId) {
+        this.serviceId = serviceId;
+    }
+
     public Service(int serviceId, String serviceName, String description, BigDecimal price, int duration, boolean isActive, Users createdBy, Timestamp createdDate) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;

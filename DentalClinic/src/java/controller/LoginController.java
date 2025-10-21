@@ -5,6 +5,7 @@
 package controller;
 
 import dal.UsersDao;
+import dal.PatientDao;
 import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;

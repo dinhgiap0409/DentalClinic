@@ -167,4 +167,24 @@ public class DoctorDao extends DBContext {
         }
     }
 
+    public List<Integer> getDoctorIdsByServiceId(int serviceId) {
+        List<Integer> doctorIds = new ArrayList<>();
+        String sql = "SELECT DoctorID FROM Doctor_Service WHERE ServiceID = ?";
+
+        try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
+
+            ps.setInt(1, serviceId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    doctorIds.add(rs.getInt("DoctorID"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return doctorIds;
+    }
+
 }
