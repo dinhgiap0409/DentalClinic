@@ -15,7 +15,9 @@ import java.util.List;
  * @author Nguyen Dinh Giap
  */
 public class DoctorDao extends DBContext {
-
+    public void testUpdate(){
+        System.out.println("Hello world");
+    }
     public DoctorDao() {
     }
 
@@ -118,16 +120,15 @@ public class DoctorDao extends DBContext {
     }
 
     public List<Doctor> getAllDoctors() {
-        String sql = "SELECT d.DoctorID, d.UserID, d.Specialization, d.LicenseNumber, " +
-                     "d.YearsOfExperience, d.Education, d.Biography, d.ConsultationFee, " +
-                     "u.FullName, u.Email, u.PhoneNumber " +
-                     "FROM dbo.Doctors d " +
-                     "INNER JOIN dbo.Users u ON d.UserID = u.UserID " +
-                     "ORDER BY d.DoctorID";
+        String sql = "SELECT d.DoctorID, d.UserID, d.Specialization, d.LicenseNumber, "
+                + "d.YearsOfExperience, d.Education, d.Biography, d.ConsultationFee, "
+                + "u.FullName, u.Email, u.PhoneNumber "
+                + "FROM dbo.Doctors d "
+                + "INNER JOIN dbo.Users u ON d.UserID = u.UserID "
+                + "ORDER BY d.DoctorID";
         List<Doctor> doctors = new ArrayList<>();
-        
-        try (Connection connect = new DBContext().connection; 
-             PreparedStatement ps = connect.prepareStatement(sql)) {
+
+        try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Doctor doctor = new Doctor();
@@ -138,14 +139,14 @@ public class DoctorDao extends DBContext {
                     doctor.setEducation(rs.getString("Education"));
                     doctor.setBiography(rs.getString("Biography"));
                     doctor.setConsultationFee(rs.getBigDecimal("ConsultationFee"));
-                    
+
                     Users user = new Users();
                     user.setUserId(rs.getInt("UserID"));
                     user.setFullName(rs.getString("FullName"));
                     user.setEmail(rs.getString("Email"));
                     user.setPhoneNumber(rs.getString("PhoneNumber"));
                     doctor.setUserId(user);
-                    
+
                     doctors.add(doctor);
                 }
             }
@@ -155,17 +156,37 @@ public class DoctorDao extends DBContext {
         return doctors;
     }
 
-    public boolean deleteDoctor(int doctorId) {
-        String sql = "DELETE FROM dbo.Doctors WHERE DoctorID = ?";
-        try (Connection connect = new DBContext().connection; 
-             PreparedStatement ps = connect.prepareStatement(sql)) {
+    public Integer getUserIdByDoctorId(int doctorId) {
+        String sql = "SELECT UserID FROM Doctors WHERE DoctorID=?";
+        try (Connection con = new DBContext().connection; PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
-            int row = ps.executeUpdate();
-            return row > 0;
-        } catch (Exception e) {
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt(1) : null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Integer> getDoctorIdsByServiceId(int serviceId) {
+        List<Integer> doctorIds = new ArrayList<>();
+        String sql = "SELECT DoctorID FROM Doctor_Service WHERE ServiceID = ?";
+
+        try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
+
+            ps.setInt(1, serviceId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    doctorIds.add(rs.getInt("DoctorID"));
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
+
+        return doctorIds;
     }
 
 }

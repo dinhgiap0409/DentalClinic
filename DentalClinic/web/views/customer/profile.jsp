@@ -1,90 +1,93 @@
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.Users"%>
+<%@page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin cá nhân - Dental Clinic</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .container { max-width: 500px; margin: 20px auto; background: white; padding: 20px; border: 1px solid #ddd; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 8px; border: 1px solid #ddd; }
-        input[readonly] { background: #f5f5f5; }
-        .btn { background: #007bff; color: white; padding: 10px; border: none; cursor: pointer; margin-right: 10px; }
-        .btn-danger { background: #dc3545; }
-        .error { background: #f8d7da; color: #721c24; padding: 10px; margin-bottom: 15px; }
-        .success { background: #d4edda; color: #155724; padding: 10px; margin-bottom: 15px; }
-        .text-center { text-align: center; }
-        a { color: #007bff; text-decoration: none; }
-    </style>
-</head>
-<body>
-    <!-- Header -->
-    <jsp:include page="../../common/header.jsp"></jsp:include>
+<html lang="vi">
+    <head>
+        <meta charset="UTF-8">
+        <title>Hồ sơ y tế</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/profile.css"/>
+    </head>
+    <body>
+        <!-- Header -->
+        <jsp:include page="/common/header.jsp" />
 
-    <div class="container">
-        <h1>Thông tin cá nhân</h1>
+        <div class="container mt-4 mb-5">
+            <h3 class="mb-3 text-center">Cập nhật hồ sơ y tế</h3>
 
-        <% if (request.getAttribute("success") != null) { %>
-            <div class="success"><%= request.getAttribute("success") %></div>
-        <% } %>
-        <% if (request.getAttribute("error") != null) { %>
-            <div class="error"><%= request.getAttribute("error") %></div>
-        <% } %>
+            <!-- Thông báo -->
+            <c:if test="${not empty success}">
+                <div class="alert alert-success text-center">${success}</div>
+            </c:if>
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger text-center">${error}</div>
+            </c:if>
 
-        <% Users user = (Users) request.getAttribute("user"); %>
-        <% if (user != null) { %>
-            <form action="user" method="POST">
-                <input type="hidden" name="action" value="update">
-                
-                <div class="form-group">
-                    <label>Tên đăng nhập</label>
-                    <input type="text" name="username" value="${user.userName}" readonly>
-                </div>
-                
-                <div class="form-group">
-                    <label>Email:</label>
-                    <input type="email" name="email" value="${user.email}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Họ và tên:</label>
-                    <input type="text" name="fullname" value="${user.fullName}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Số điện thoại:</label>
-                    <input type="tel" name="phone" value="${user.phoneNumber}" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Giới tính:</label>
-                    <select name="gender" required>
-                        <option value="Nam" ${user.gender.equals("Nam") ? "selected" : ""}>Nam</option>
-                        <option value="Nữ" ${user.gender.equals("Nữ") ? "selected" : ""}>Nữ</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Vai trò</label>
-                    <input type="text" value="${user.role}" readonly>
-                </div>
+            <!-- Form -->
+            <form action="${pageContext.request.contextPath}/profile" method="post">
+                <div class="card p-4 shadow-sm">
+                    <div class="mb-3">
+                        <label for="fullName" class="form-label">Họ tên</label>
+                        <input type="text" id="fullName" class="form-control" value="${patient.user.fullName}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" class="form-control" value="${patient.user.email}" readonly>
+                    </div>
+                    <hr>
 
-                <button type="submit" class="btn">Cập nhật</button>
-                <a href="/DentalClinic/user?action=logout" class="btn btn-danger">Đăng xuất</a>
+                    <div class="mb-3">
+                        <label for="bloodType" class="form-label">Nhóm máu</label>
+                        <select class="form-select" id="bloodType" name="bloodType">
+                            <option value="">-- Chọn --</option>
+                            <c:set var="bt" value="${patient.bloodType}" />
+                            <c:forEach var="type" items="${bloodTypes}">
+                                <option value="${type}" <c:if test="${bt == type}">selected</c:if>>${type}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="allergies" class="form-label">Dị ứng</label>
+                        <textarea class="form-control" id="allergies" name="allergies" rows="2">${patient.allergies}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="medicalHistory" class="form-label">Tiền sử bệnh</label>
+                        <textarea class="form-control" id="medicalHistory" name="medicalHistory" rows="3">${patient.medicalHistory}</textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="insuranceInfo" class="form-label">Thông tin bảo hiểm</label>
+                        <input class="form-control" type="text" id="insuranceInfo" name="insuranceInfo" value="${patient.insuranceInfo}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="emergencyContactName" class="form-label">Người liên hệ khẩn cấp</label>
+                        <input class="form-control" type="text" id="emergencyContactName" name="emergencyContactName" value="${patient.emergencyContactName}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="emergencyContactPhone" class="form-label">SĐT liên hệ khẩn cấp</label>
+                        <input class="form-control" type="text" id="emergencyContactPhone" name="emergencyContactPhone" value="${patient.emergencyContactPhone}">
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        <a href="${pageContext.request.contextPath}/" class="btn btn-secondary">Hủy</a>
+                    </div>
+                </div>
             </form>
-        <% } else { %>
-            <div class="text-center">
-                <p>Không tìm thấy thông tin.</p>
-                <a href="/DentalClinic/user?action=login">Đăng nhập</a>
-            </div>
-        <% } %>
-    </div>
+        </div>
 
-    <!-- Footer -->
-    <jsp:include page="../../common/footer.jsp"></jsp:include>
-</body>
+        <jsp:include page="/common/footer.jsp" />
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Ẩn thông báo sau 5 giây
+            setTimeout(() => {
+                document.querySelectorAll('.alert').forEach(el => el.style.display = 'none');
+            }, 5000);
+        </script>
+    </body>
 </html>

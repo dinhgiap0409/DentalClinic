@@ -1,21 +1,18 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package controller;
 
 import dal.ServiceDao;
-import model.Service;
-import model.Users;
+import dto.ServiceDto;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 /**
  *
@@ -24,163 +21,113 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet(name = "ServiceController", urlPatterns = {"/service"})
 public class ServiceController extends HttpServlet {
 
-    private ServiceDao serviceDao;
-
-    @Override
-    public void init() throws ServletException {
-        serviceDao = new ServiceDao();
-    }
+    private ServiceDao serviceDao = new ServiceDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
         
-        switch (action) {
-            case "list":
-                showServiceList(request, response);
-                break;
-            case "detail":
-                showServiceDetail(request, response);
-                break;
-            case "add":
-                showAddServiceForm(request, response);
-                break;
-            case "edit":
-                showEditServiceForm(request, response);
-                break;
-            case "delete":
-                deleteService(request, response);
-                break;
-            default:
-                showServiceList(request, response);
-        }
+        // Tạo filter mặc định để hiển thị tất cả services
+        ServiceDto filter = new ServiceDto();
+        filter.setPaginationMode(true);
+        filter.setSortMode(true);
+        filter.setPage(1);
+        filter.setSize(2);
+        
+        // Lấy dữ liệu
+        List<ServiceDto> list = serviceDao.filterService(filter);
+        int total = serviceDao.countServices();
+        int totalPages = (total % 2) == 0 ? (total / 2) : (total / 2) + 1;
+        
+        // Set attributes
+        request.setAttribute("list", list);
+        request.setAttribute("page", 1);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("size", 2);
+        
+        request.getRequestDispatcher("/views/customer/service.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String action = request.getParameter("action");
         
-        switch (action) {
-            case "add":
-                handleAddService(request, response);
-                break;
-            case "update":
-                handleUpdateService(request, response);
-                break;
+        //lay parameter tư request
+        String serviceName = request.getParameter("serviceName");
+        String priceFromStr = request.getParameter("priceFrom");
+        String priceToStr = request.getParameter("priceTo");
+        String isActiveStr = request.getParameter("isActive");
+        
+        int page;
+        try {
+            page = Integer.parseInt(request.getParameter("page"));
+        } catch (Exception e) {
+            page = 1;
         }
+        int size = 2;
+        
+        // tao filter
+        ServiceDto filter = new ServiceDto();
+        filter.setServiceName(serviceName);
+        
+        // Set gia tien
+        try {
+            if (priceFromStr != null && !priceFromStr.trim().isEmpty()) {
+                filter.setPriceFrom(Double.parseDouble(priceFromStr));
+            }
+        } catch (NumberFormatException e) {
+            
+        }
+        
+        try {
+            if (priceToStr != null && !priceToStr.trim().isEmpty()) {
+                filter.setPriceTo(Double.parseDouble(priceToStr));
+            }
+        } catch (NumberFormatException e) {
+            
+        }
+        
+        // Set hoat dong status
+        if (isActiveStr != null && !isActiveStr.trim().isEmpty()) {
+            filter.setIsActive(Boolean.parseBoolean(isActiveStr));
+        }
+        
+        // Set phan trang
+        filter.setPaginationMode(true);
+        filter.setSortMode(true);
+        filter.setPage(page);
+        filter.setSize(size);
+        
+        // Validate trang
+        if (page < 1) {
+            page = 1;
+            filter.setPage(page);
+        }
+        
+        // lay du lieu tu filterService
+        List<ServiceDto> list = serviceDao.filterService(filter);
+        
+        // tinh tong tang
+        int total = serviceDao.countServices();
+        int totalPages = (total % size) == 0 ? (total / size) : (total / size) + 1;
+        
+        if (page > totalPages && totalPages > 0) {
+            page = totalPages;
+            filter.setPage(page);
+            list = serviceDao.filterService(filter);
+        }
+        
+        request.setAttribute("list", list);
+        request.setAttribute("page", page);
+        request.setAttribute("totalPages", totalPages);
+        request.setAttribute("size", size);
+        request.setAttribute("filter", filter);
+        request.getRequestDispatcher("/views/customer/service.jsp").forward(request, response);
     }
 
-    private void showServiceList(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Service> services = serviceDao.getAllServices();
-        request.setAttribute("services", services);
-        request.getRequestDispatcher("views/dashboard/service-list.jsp").forward(request, response);
-    }
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 
-    private void showServiceDetail(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int serviceId = Integer.parseInt(request.getParameter("id"));
-        Service service = serviceDao.getServiceById(serviceId);
-        
-        if (service != null) {
-            request.setAttribute("service", service);
-            request.getRequestDispatcher("views/dashboard/service-detail.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Không tìm thấy dịch vụ!");
-            request.getRequestDispatcher("views/dashboard/service-list.jsp").forward(request, response);
-        }
-    }
-
-    private void showAddServiceForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.getRequestDispatcher("views/dashboard/service-add.jsp").forward(request, response);
-    }
-
-    private void showEditServiceForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int serviceId = Integer.parseInt(request.getParameter("id"));
-        Service service = serviceDao.getServiceById(serviceId);
-        
-        if (service != null) {
-            request.setAttribute("service", service);
-            request.getRequestDispatcher("views/dashboard/service-edit.jsp").forward(request, response);
-        } else {
-            request.setAttribute("error", "Không tìm thấy dịch vụ!");
-            request.getRequestDispatcher("views/dashboard/service-list.jsp").forward(request, response);
-        }
-    }
-
-    private void deleteService(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        int serviceId = Integer.parseInt(request.getParameter("id"));
-        boolean success = serviceDao.deleteService(serviceId);
-        
-        if (success) {
-            request.setAttribute("success", "Xóa dịch vụ thành công!");
-        } else {
-            request.setAttribute("error", "Xóa dịch vụ thất bại!");
-        }
-        
-        response.sendRedirect("service?action=list");
-    }
-
-    private void handleAddService(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Users currentUser = (Users) session.getAttribute("user");
-        
-        if (currentUser == null || !"admin".equals(currentUser.getRole())) {
-            response.sendRedirect("user?action=login");
-            return;
-        }
-        
-        Service service = new Service();
-        service.setServiceName(request.getParameter("serviceName"));
-        service.setDescription(request.getParameter("description"));
-        service.setPrice(new BigDecimal(request.getParameter("price")));
-        service.setDuration(Integer.parseInt(request.getParameter("duration")));
-        service.setIsActive(Boolean.parseBoolean(request.getParameter("isActive")));
-        service.setCreatedBy(currentUser);
-        
-        int result = serviceDao.insertService(service);
-        
-        if (result > 0) {
-            request.setAttribute("success", "Thêm dịch vụ thành công!");
-        } else {
-            request.setAttribute("error", "Thêm dịch vụ thất bại!");
-        }
-        
-        request.getRequestDispatcher("views/dashboard/service-add.jsp").forward(request, response);
-    }
-
-    private void handleUpdateService(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        Users currentUser = (Users) session.getAttribute("user");
-        
-        if (currentUser == null || !"admin".equals(currentUser.getRole())) {
-            response.sendRedirect("user?action=login");
-            return;
-        }
-        
-        Service service = new Service();
-        service.setServiceId(Integer.parseInt(request.getParameter("serviceId")));
-        service.setServiceName(request.getParameter("serviceName"));
-        service.setDescription(request.getParameter("description"));
-        service.setPrice(new BigDecimal(request.getParameter("price")));
-        service.setDuration(Integer.parseInt(request.getParameter("duration")));
-        service.setIsActive(Boolean.parseBoolean(request.getParameter("isActive")));
-        
-        boolean success = serviceDao.updateService(service);
-        
-        if (success) {
-            request.setAttribute("success", "Cập nhật dịch vụ thành công!");
-        } else {
-            request.setAttribute("error", "Cập nhật dịch vụ thất bại!");
-        }
-        
-        request.getRequestDispatcher("views/dashboard/service-edit.jsp").forward(request, response);
-    }
 }
