@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/WEB-INF/web.xml</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/error.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/views/receptionist/dashboard.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/views/receptionist/daily-appointments.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/ProfileController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/utils/ProgramException.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/newjsp.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/views/receptionist/search.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/ResigterController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/index.html</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/model/Appointments.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/filter/AuthorizationFilter.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/dto/AppointmentDto.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/dto/DoctorDTO.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/dal/AppointmentsDao.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/web/appointment-success.jsp</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/ReceptionistDashboardController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/ReceptionistDailyAppointmentsController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/dal/DBContext.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/HomeController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/ReceptionistSerchController.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/utils/Validation.java</file>
+            <file>file:/Users/vuhieu/Documents/DentalClinic%20(1)/src/java/controller/LoginController.java</file>
+        </group>
+    </open-files>
+</project-private>

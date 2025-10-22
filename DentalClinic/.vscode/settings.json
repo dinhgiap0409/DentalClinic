@@ -1,0 +1,14 @@
+{
+    "java.project.sourcePaths": [
+        "DentalClinic/src/java"
+    ],
+    "java.project.referencedLibraries": [
+        "DentalClinic/lib/mssql-jdbc-10.2.1.jre17.jar",
+        "DentalClinic/lib/jakarta.servlet.jsp.jstl-2.0.0.jar",
+        "DentalClinic/lib/jakarta.servlet.jsp.jstl-api-2.0.0.jar",
+        "DentalClinic/lib/jakarta.servlet-api-6.0.0.jar",
+        "DentalClinic/lib/jaxb-api-2.1.jar",
+        "DentalClinic/lib/sqljdbc42.jar",
+        "DentalClinic/lib/gson-2.10.1.jar"
+    ]
+}
