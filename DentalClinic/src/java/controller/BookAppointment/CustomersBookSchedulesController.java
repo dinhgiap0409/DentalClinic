@@ -25,7 +25,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 @WebServlet(name = "CustomersBookSchedulesController", urlPatterns = {"/CustomersBookSchedules"})
 public class CustomersBookSchedulesController extends HttpServlet {

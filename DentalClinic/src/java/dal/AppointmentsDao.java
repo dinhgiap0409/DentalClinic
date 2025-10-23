@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
-
+import dto.*;
 import dto.AppointmentDto;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,9 +14,10 @@ import model.Doctor;
 import model.Service;
 import model.Users;
 
+
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class AppointmentsDao extends DBContext {
 
@@ -298,5 +299,61 @@ public class AppointmentsDao extends DBContext {
         }
         return history;
     }
+    public List<Appointments> getAppointmentsByDoctorAndDate(int doctorId, java.sql.Date date) {
+    List<Appointments> list = new ArrayList<>();
 
+    String sql = """
+        SELECT 
+            a.AppointmentID, a.AppointmentDate, a.StartTime, a.EndTime, a.Status,
+            p.PatientID,
+            u.UserID, u.FullName,
+            s.ServiceID, s.ServiceName
+        FROM dbo.Appointments a
+        JOIN dbo.Patients p ON a.PatientID = p.PatientID
+        JOIN dbo.Users u ON p.UserID = u.UserID
+        JOIN dbo.Services s ON a.ServiceID = s.ServiceID
+        WHERE a.DoctorID = ? AND a.AppointmentDate = ?
+        ORDER BY a.StartTime ASC
+    """;
+
+    try (Connection conn = new DBContext().connection;
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, doctorId);
+        ps.setDate(2, date);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Appointments a = new Appointments();
+                a.setAppointmentId(rs.getInt("AppointmentID"));
+                a.setAppointmentDate(rs.getDate("AppointmentDate"));
+                a.setStartTime(rs.getTime("StartTime"));
+                a.setEndTime(rs.getTime("EndTime"));
+                a.setStatus(rs.getString("Status"));
+
+                // 🔹 Gắn thông tin bệnh nhân và user (FullName)
+                Users user = new Users();
+                user.setUserId(rs.getInt("UserID"));
+                user.setFullName(rs.getString("FullName"));
+
+                Patients patient = new Patients();
+                patient.setPatientID(rs.getInt("PatientID"));
+                patient.setUserID(  user); // gán user vào bệnh nhân
+
+                a.setPatientId(patient);
+
+                // 🔹 Gắn thông tin dịch vụ
+                Service s = new Service();
+                s.setServiceId(rs.getInt("ServiceID"));
+                s.setServiceName(rs.getString("ServiceName"));
+                a.setServiceId(s);
+
+                list.add(a);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return list;
+}
 }

@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 import java.sql.Date;
 

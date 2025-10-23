@@ -22,7 +22,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 @WebServlet(name="AppropriateSpecialistController", urlPatterns={"/appropriateSpecialist"})
 public class AppropriateSpecialistController extends HttpServlet {

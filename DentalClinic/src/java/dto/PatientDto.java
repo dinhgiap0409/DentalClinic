@@ -8,7 +8,7 @@ import model.Users; // Corrected import
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class PatientDto {
 

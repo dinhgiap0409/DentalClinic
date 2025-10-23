@@ -9,7 +9,7 @@ import java.sql.Date;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class Medications {
 

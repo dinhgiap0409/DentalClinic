@@ -7,7 +7,7 @@ import java.sql.*;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class ScheduleDto {
     //su dung wrapper mac dinh = null 

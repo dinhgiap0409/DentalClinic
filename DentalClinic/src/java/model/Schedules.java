@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class Schedules {
 

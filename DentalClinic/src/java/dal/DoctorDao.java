@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class DoctorDao extends DBContext {
     public void testUpdate(){

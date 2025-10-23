@@ -16,7 +16,7 @@ import model.ScheduleExceptions;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang
  */
 public class ScheduleExceptionsDao extends DBContext {
 
