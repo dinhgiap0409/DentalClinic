@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class ServiceDao extends DBContext {
 

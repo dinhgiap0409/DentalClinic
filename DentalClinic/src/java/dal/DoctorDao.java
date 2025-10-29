@@ -15,9 +15,7 @@ import java.util.List;
  * @author Nguyen Dang Khang
  */
 public class DoctorDao extends DBContext {
-    public void testUpdate(){
-        System.out.println("Hello world");
-    }
+
     public DoctorDao() {
     }
 

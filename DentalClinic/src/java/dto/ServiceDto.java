@@ -10,7 +10,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class ServiceDto {
     private String serviceName;

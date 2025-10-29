@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class Prescriptions {
 

@@ -14,7 +14,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class ScheduleDao extends DBContext {
 

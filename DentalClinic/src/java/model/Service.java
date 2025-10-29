@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class Service {
 

@@ -1,9 +1,9 @@
-/*
+    /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dal;
-import dto.*;
+
 import dto.AppointmentDto;
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,12 +14,93 @@ import model.Doctor;
 import model.Service;
 import model.Users;
 
-
 /**
  *
  * @author Nguyen Dang Khang
  */
 public class AppointmentsDao extends DBContext {
+
+    public boolean updateAppointment(Appointments a) {
+        if (a == null || a.getAppointmentId() <= 0) {
+            return false;
+        }
+
+        String sql = """
+        UPDATE dbo.Appointments
+        SET 
+            PatientID = ?, 
+            DoctorID = ?, 
+            ServiceID = ?, 
+            AppointmentDate = ?, 
+            StartTime = ?, 
+            EndTime = ?, 
+            Status = ?, 
+            Notes = ?, 
+            UpdatedDate = GETDATE()
+        WHERE AppointmentID = ?
+    """;
+
+        try (Connection conn = new DBContext().connection; PreparedStatement ps = conn.prepareStatement(sql)) {
+            int i = 1;
+
+            // Gán các giá trị cho cột
+            if (a.getPatientId() != null) {
+                ps.setInt(i++, a.getPatientId().getPatientID());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getDoctorId() != null) {
+                ps.setInt(i++, a.getDoctorId().getDoctorID());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getServiceId() != null) {
+                ps.setInt(i++, a.getServiceId().getServiceId());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getAppointmentDate() != null) {
+                ps.setDate(i++, a.getAppointmentDate());
+            } else {
+                ps.setNull(i++, Types.DATE);
+            }
+
+            if (a.getStartTime() != null) {
+                ps.setTime(i++, a.getStartTime());
+            } else {
+                ps.setNull(i++, Types.TIME);
+            }
+
+            if (a.getEndTime() != null) {
+                ps.setTime(i++, a.getEndTime());
+            } else {
+                ps.setNull(i++, Types.TIME);
+            }
+
+            if (a.getStatus() != null && !a.getStatus().isBlank()) {
+                ps.setString(i++, a.getStatus().trim());
+            } else {
+                ps.setNull(i++, Types.NVARCHAR);
+            }
+
+            if (a.getNotes() != null && !a.getNotes().isBlank()) {
+                ps.setString(i++, a.getNotes());
+            } else {
+                ps.setNull(i++, Types.NVARCHAR);
+            }
+
+            ps.setInt(i++, a.getAppointmentId());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     //lay lich hen qua id
     public Appointments getAppointmentsById(int appointmentId) {
@@ -176,6 +257,14 @@ public class AppointmentsDao extends DBContext {
         if (!a.getEndTime().after(a.getStartTime())) {
             return null;
         }
+
+        // check trung lap voi bac si
+//        if (existsDoctorTimeConflict(a.getDoctorId().getDoctorID(), a.getAppointmentDate(),
+//                a.getStartTime(), a.getEndTime())) {
+//            //trung lap ve thoi gian
+//            return null;
+//
+//        }
         String sql = """
         INSERT INTO dbo.Appointments
             (PatientID, DoctorID, ServiceID,
@@ -210,7 +299,6 @@ public class AppointmentsDao extends DBContext {
             return null;
 
         } catch (java.sql.SQLException e) {
-            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -218,13 +306,17 @@ public class AppointmentsDao extends DBContext {
     //ham check trung lap khoang thoi gian
     public boolean existsDoctorTimeConflict(int doctorId, Date appointmentDate,
             Time newStartTime, Time newEndTime) {
+        //check trung lap trung dau, trung giua va trung cuoi
         String sql = """
         SELECT 1
         FROM dbo.Appointments
         WHERE DoctorID = ? AND AppointmentDate = ? 
         AND Status != 'Cancelled'
-        AND StartTime < ? AND ? < EndTime
-        AND StartTime < ? AND ? < EndTime -- StartTime < newEndTime AND newStartTime < EndTime
+        AND (
+            (StartTime < ? AND EndTime > ?) OR  
+            (StartTime < ? AND EndTime > ?) OR   
+            (StartTime >= ? AND EndTime <= ?)  
+        )
     """;
         try (Connection cn = new DBContext().connection; PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
@@ -233,17 +325,22 @@ public class AppointmentsDao extends DBContext {
             ps.setTime(4, newStartTime);
             ps.setTime(5, newEndTime);
             ps.setTime(6, newStartTime);
+            ps.setTime(7, newStartTime);
+            ps.setTime(8, newEndTime);
+
             try (ResultSet rs = ps.executeQuery()) {
+                //co trung lap
                 return rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
             return true;
         }
     }
-     /**
-     * Lấy danh sách lịch sử các cuộc hẹn đã hoàn thành của một bệnh nhân.
-     * Hàm này truy vấn kèm tên bác sĩ và tên dịch vụ để hiển thị.
+
+    /**
+     * Lấy danh sách lịch sử các cuộc hẹn đã hoàn thành của một bệnh nhân. Hàm
+     * này truy vấn kèm tên bác sĩ và tên dịch vụ để hiển thị.
+     *
      * @param patientId ID của bệnh nhân.
      * @return Một List chứa thông tin cơ bản của các lần khám.
      */
@@ -290,7 +387,7 @@ public class AppointmentsDao extends DBContext {
                     doctorUser.setFullName(rs.getString("DoctorName"));
                     doctor.setUserId(doctorUser);
                     appointment.setDoctorId(doctor);
-                    
+
                     history.add(appointment);
                 }
             }
@@ -299,61 +396,5 @@ public class AppointmentsDao extends DBContext {
         }
         return history;
     }
-    public List<Appointments> getAppointmentsByDoctorAndDate(int doctorId, java.sql.Date date) {
-    List<Appointments> list = new ArrayList<>();
 
-    String sql = """
-        SELECT 
-            a.AppointmentID, a.AppointmentDate, a.StartTime, a.EndTime, a.Status,
-            p.PatientID,
-            u.UserID, u.FullName,
-            s.ServiceID, s.ServiceName
-        FROM dbo.Appointments a
-        JOIN dbo.Patients p ON a.PatientID = p.PatientID
-        JOIN dbo.Users u ON p.UserID = u.UserID
-        JOIN dbo.Services s ON a.ServiceID = s.ServiceID
-        WHERE a.DoctorID = ? AND a.AppointmentDate = ?
-        ORDER BY a.StartTime ASC
-    """;
-
-    try (Connection conn = new DBContext().connection;
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, doctorId);
-        ps.setDate(2, date);
-
-        try (ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
-                Appointments a = new Appointments();
-                a.setAppointmentId(rs.getInt("AppointmentID"));
-                a.setAppointmentDate(rs.getDate("AppointmentDate"));
-                a.setStartTime(rs.getTime("StartTime"));
-                a.setEndTime(rs.getTime("EndTime"));
-                a.setStatus(rs.getString("Status"));
-
-                // 🔹 Gắn thông tin bệnh nhân và user (FullName)
-                Users user = new Users();
-                user.setUserId(rs.getInt("UserID"));
-                user.setFullName(rs.getString("FullName"));
-
-                Patients patient = new Patients();
-                patient.setPatientID(rs.getInt("PatientID"));
-                patient.setUserID(  user); // gán user vào bệnh nhân
-
-                a.setPatientId(patient);
-
-                // 🔹 Gắn thông tin dịch vụ
-                Service s = new Service();
-                s.setServiceId(rs.getInt("ServiceID"));
-                s.setServiceName(rs.getString("ServiceName"));
-                a.setServiceId(s);
-
-                list.add(a);
-            }
-        }
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-
-    return list;
-}
 }

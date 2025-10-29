@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dinh Giap
  */
 public class Orders {
       private int orderId;            
