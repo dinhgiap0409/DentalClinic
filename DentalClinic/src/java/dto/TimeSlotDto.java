@@ -8,7 +8,7 @@ import java.sql.Time;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class TimeSlotDto {
     private Time startTime;

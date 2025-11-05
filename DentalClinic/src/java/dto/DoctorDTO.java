@@ -23,11 +23,12 @@ public class DoctorDTO {
     private String education;
     private String biography;
     private BigDecimal consultationFee;
+    private String image;
 
     public DoctorDTO() {
     }
 
-    public DoctorDTO(int doctorId, int userId, String fullName, String email, String phoneNumber, String gender, Date dateOfBirth, String address, String specialization, String licenseNumber, int yearsOfExperience, String education, String biography, BigDecimal consultationFee) {
+    public DoctorDTO(int doctorId, int userId, String fullName, String email, String phoneNumber, String gender, Date dateOfBirth, String address, String specialization, String licenseNumber, int yearsOfExperience, String education, String biography, BigDecimal consultationFee, String image) {
         this.doctorId = doctorId;
         this.userId = userId;
         this.fullName = fullName;
@@ -42,6 +43,7 @@ public class DoctorDTO {
         this.education = education;
         this.biography = biography;
         this.consultationFee = consultationFee;
+        this.image = image;
     }
 
     public int getDoctorId() {
@@ -156,9 +158,16 @@ public class DoctorDTO {
         this.consultationFee = consultationFee;
     }
 
-    @Override
-    public String toString() {
-        return "DoctorDTO{" + "doctorId=" + doctorId + ", userId=" + userId + ", fullName=" + fullName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", gender=" + gender + ", dateOfBirth=" + dateOfBirth + ", address=" + address + ", specialization=" + specialization + ", licenseNumber=" + licenseNumber + ", yearsOfExperience=" + yearsOfExperience + ", education=" + education + ", biography=" + biography + ", consultationFee=" + consultationFee + '}';
+    public String getImage() {
+        return image;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    
+
+    
 
 }

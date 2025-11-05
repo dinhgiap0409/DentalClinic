@@ -32,7 +32,7 @@
 
                 <div class="success-actions">
                     <a href="/DentalClinic/home" class="btn-primary">Về trang chủ</a>
-                    <a href="/DentalClinic/myAppointments" class="btn-secondary">Xem lịch hẹn của tôi</a>
+                    <a href="/DentalClinic/medicalHistory" class="btn-secondary">Xem lịch hẹn của tôi</a>
                 </div>
             </div>
         </div>

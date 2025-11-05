@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dang Khang 
  */
 @WebServlet(name = "ServiceController", urlPatterns = {"/service"})
 public class ServiceController extends HttpServlet {

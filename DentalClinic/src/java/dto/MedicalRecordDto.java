@@ -15,6 +15,10 @@ public class MedicalRecordDto {
     private Date followUpDate;
     private Date createdDateFrom;
     private Date createdDateTo;
+    
+    private Integer patientId;   // lọc theo bệnh nhân
+    private Integer doctorId;
+    
     private boolean paginationMode = true;
     private boolean sortMode = false;
     private int page = 1;
@@ -23,7 +27,7 @@ public class MedicalRecordDto {
     public MedicalRecordDto() {
     }
 
-    public MedicalRecordDto(Integer recordId, Integer appointmentId, String diagnosis, String symptoms, String treatmentPlan, Date followUpDate, Date createdDateFrom, Date createdDateTo) {
+    public MedicalRecordDto(Integer recordId, Integer appointmentId, String diagnosis, String symptoms, String treatmentPlan, Date followUpDate, Date createdDateFrom, Date createdDateTo, Integer patientId, Integer doctorId) {
         this.recordId = recordId;
         this.appointmentId = appointmentId;
         this.diagnosis = diagnosis;
@@ -32,6 +36,8 @@ public class MedicalRecordDto {
         this.followUpDate = followUpDate;
         this.createdDateFrom = createdDateFrom;
         this.createdDateTo = createdDateTo;
+        this.patientId = patientId;
+        this.doctorId = doctorId;
     }
 
     public Integer getRecordId() {
@@ -98,6 +104,22 @@ public class MedicalRecordDto {
         this.createdDateTo = createdDateTo;
     }
 
+    public Integer getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(Integer patientId) {
+        this.patientId = patientId;
+    }
+
+    public Integer getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(Integer doctorId) {
+        this.doctorId = doctorId;
+    }
+
     public boolean isPaginationMode() {
         return paginationMode;
     }
@@ -129,11 +151,9 @@ public class MedicalRecordDto {
     public void setSize(int size) {
         this.size = size;
     }
+    
+    
 
-    @Override
-    public String toString() {
-        return "MedicalRecordDto{" + "recordId=" + recordId + ", appointmentId=" + appointmentId + ", diagnosis=" + diagnosis + ", symptoms=" + symptoms + ", treatmentPlan=" + treatmentPlan + ", followUpDate=" + followUpDate + ", createdDateFrom=" + createdDateFrom + ", createdDateTo=" + createdDateTo + ", paginationMode=" + paginationMode + ", sortMode=" + sortMode + ", page=" + page + ", size=" + size + '}';
-    }
     
     
     

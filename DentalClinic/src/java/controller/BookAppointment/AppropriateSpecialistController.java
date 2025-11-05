@@ -22,7 +22,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dang Khang 
  */
 @WebServlet(name="AppropriateSpecialistController", urlPatterns={"/appropriateSpecialist"})
 public class AppropriateSpecialistController extends HttpServlet {
@@ -55,7 +55,7 @@ public class AppropriateSpecialistController extends HttpServlet {
                 Doctor doctor = doctorDAO.getDoctorByID(doctorId);
                 if (doctor != null && doctor.getUserId() != null) {
                     int userId = doctor.getUserId().getUserId();
-                    Users user = userDAO.getUserById(userId);
+                            Users user = userDAO.getUserById(userId);
 
                     // Gói vào DTO
                     DoctorDTO dto = new DoctorDTO();
@@ -67,7 +67,7 @@ public class AppropriateSpecialistController extends HttpServlet {
                     dto.setYearsOfExperience(doctor.getYearsOfExperience());
                     dto.setBiography(doctor.getBiography());
                     dto.setConsultationFee(doctor.getConsultationFee());
-
+                    dto.setImage(user.getImage());
                     doctorDTOs.add(dto);
                 }
             }

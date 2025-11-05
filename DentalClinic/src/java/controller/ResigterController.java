@@ -17,7 +17,7 @@ import model.Users;
 
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dang Khang 
  */
 @WebServlet(name="resigterController", urlPatterns={"/register"})
 public class ResigterController extends HttpServlet {

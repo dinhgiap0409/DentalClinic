@@ -3,54 +3,59 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package dto;
-import java.sql.*;
+
+import java.sql.Time;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class ScheduleDto {
-    //su dung wrapper mac dinh = null 
-    //khi nguoi dung ko truyen dieu kien thi tra ve null
-    private Integer doctorId; 
-    private Integer dayOfWeek;
-    private Time startTime;
-    private Time endTime;
-    private Boolean isAvailable;
+
+    // ===== Thông tin lọc chính =====
+    private Integer doctorId;         // Lọc theo ID bác sĩ
+    private String doctorName;        // Lọc theo tên bác sĩ (UserName hoặc FullName)
+    private Integer dayOfWeek;        // Lọc theo ngày trong tuần (1-7)
+    private Time startTime;           // Lọc theo giờ bắt đầu >= startTime
+    private Time endTime;             // Lọc theo giờ kết thúc <= endTime
+    private Boolean isAvailable;      // Lọc theo trạng thái có sẵn
+    private Boolean requiresApproval; // Lọc theo yêu cầu phê duyệt
+    private Boolean isApproved;       // Lọc theo trạng thái phê duyệt
+
+    // ===== Thông tin khác (tùy chọn) =====
     private Integer maxAppointment;
     private Date validFrom;
     private Date validTo;
-    private Boolean requiresApproval; 
-    private Boolean isApproved;
     private Integer approvedBy;
     private Timestamp approvedDate;
     private Timestamp createdDate;
 
-    //phan trang
-    private boolean sortMode;
-    private boolean paginationMode;
-    private int page = 1;
-    private int size = 10;
+    // ===== Phân trang & sắp xếp =====
+    private boolean sortMode = true;       // true = ASC, false = DESC
+    private boolean paginationMode = false; // true = bật phân trang
+    private int page = 1;                   // số trang hiện tại
+    private int size = 10;                  // số bản ghi trên 1 trang
 
     public ScheduleDto() {
     }
 
-    public ScheduleDto(Integer doctorId, Integer dayOfWeek, Time startTime, Time endTime, Boolean isAvailable, Integer maxAppointment, Date validFrom, Date validTo, Boolean requiresApproval, Boolean isApproved, Integer approvedBy, Timestamp approvedDate, Timestamp createdDate, boolean sortMode, boolean paginationMode) {
+    public ScheduleDto(Integer doctorId, String doctorName, Integer dayOfWeek, Time startTime, Time endTime, Boolean isAvailable, Boolean requiresApproval, Boolean isApproved, Integer maxAppointment, Date validFrom, Date validTo, Integer approvedBy, Timestamp approvedDate, Timestamp createdDate) {
         this.doctorId = doctorId;
+        this.doctorName = doctorName;
         this.dayOfWeek = dayOfWeek;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isAvailable = isAvailable;
+        this.requiresApproval = requiresApproval;
+        this.isApproved = isApproved;
         this.maxAppointment = maxAppointment;
         this.validFrom = validFrom;
         this.validTo = validTo;
-        this.requiresApproval = requiresApproval;
-        this.isApproved = isApproved;
         this.approvedBy = approvedBy;
         this.approvedDate = approvedDate;
         this.createdDate = createdDate;
-        this.sortMode = sortMode;
-        this.paginationMode = paginationMode;
     }
 
     public Integer getDoctorId() {
@@ -59,6 +64,14 @@ public class ScheduleDto {
 
     public void setDoctorId(Integer doctorId) {
         this.doctorId = doctorId;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
     }
 
     public Integer getDayOfWeek() {
@@ -93,6 +106,22 @@ public class ScheduleDto {
         this.isAvailable = isAvailable;
     }
 
+    public Boolean getRequiresApproval() {
+        return requiresApproval;
+    }
+
+    public void setRequiresApproval(Boolean requiresApproval) {
+        this.requiresApproval = requiresApproval;
+    }
+
+    public Boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setIsApproved(Boolean isApproved) {
+        this.isApproved = isApproved;
+    }
+
     public Integer getMaxAppointment() {
         return maxAppointment;
     }
@@ -115,22 +144,6 @@ public class ScheduleDto {
 
     public void setValidTo(Date validTo) {
         this.validTo = validTo;
-    }
-
-    public Boolean getRequiresApproval() {
-        return requiresApproval;
-    }
-
-    public void setRequiresApproval(Boolean requiresApproval) {
-        this.requiresApproval = requiresApproval;
-    }
-
-    public Boolean getIsApproved() {
-        return isApproved;
-    }
-
-    public void setIsApproved(Boolean isApproved) {
-        this.isApproved = isApproved;
     }
 
     public Integer getApprovedBy() {
@@ -189,4 +202,7 @@ public class ScheduleDto {
         this.size = size;
     }
     
+    
+
+
 }

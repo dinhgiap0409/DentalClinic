@@ -6,7 +6,7 @@ package dal;
 import java.sql.*;
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dang Khang 
  */
 public class NotificationsDao extends DBContext {
 

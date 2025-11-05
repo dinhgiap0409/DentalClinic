@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class Doctor {
 

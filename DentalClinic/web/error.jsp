@@ -53,7 +53,7 @@
     <body>
         <div class="error-container">
             <h1>⚠️ Đã xảy ra lỗi!</h1>
-            <p><strong><c:out value="${errorMessage}" default="Đã xảy ra lỗi trong quá trình xử lý yêu cầu." /></strong></p>
+            <p><strong><c:out value="${error}" default="Đã xảy ra lỗi trong quá trình xử lý yêu cầu." /></strong></p>
 
             <button onclick="window.history.back()">⬅️ Quay lại</button>
 

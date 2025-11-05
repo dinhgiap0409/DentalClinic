@@ -1,107 +1,96 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ */
 package controller;
 
+import dal.PatientDao;
 import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import dal.PatientDao;
-import dto.PatientDto;
 import model.Patients;
 import model.Users;
-import constant.ConstantsBloodType;
 
-@WebServlet(name="ProfileController", urlPatterns={"/patient/profile"})
+/**
+ *
+ * @author Nguyen Dang Khang 
+ */
+@WebServlet(name = "ProfileController", urlPatterns = {"/profile"})
 public class ProfileController extends HttpServlet {
-    
-    private final PatientDao patientDao = new PatientDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Kiem tra dang nhap
-        HttpSession session = request.getSession();
-        Users userSession = (Users) session.getAttribute("user");
-        if (userSession == null) {
-            response.sendRedirect("login");
-            return;
-        }
+        request.getRequestDispatcher("views/profile/profile.jsp").forward(request, response);
 
-        // Lay thong tin patient
-        Patients patient = patientDao.getPatientByUserId(userSession.getUserId());
-        if (patient == null) {
-            // Tao patient moi neu chua co
-            Patients newPatient = new Patients();
-            newPatient.setUserID(userSession);
-            patientDao.insertPatient(newPatient);
-            patient = patientDao.getPatientByUserId(userSession.getUserId());
-        }
-
-        // Tao DTO
-        PatientDto dto = new PatientDto();
-        dto.setPatientId(patient.getPatientID());
-        dto.setUser(patient.getUserID());
-        dto.setBloodType(patient.getBloodType());
-        dto.setAllergies(patient.getAllergies());
-        dto.setMedicalHistory(patient.getMedicalHistory());
-        dto.setInsuranceInfo(patient.getInsuranceInfo());
-        dto.setEmergencyContactName(patient.getEmergencyContactName());
-        dto.setEmergencyContactPhone(patient.getEmergencyContactPhone());
-
-        // Gửi danh sách nhóm máu sang JSP
-        request.setAttribute("bloodTypes", ConstantsBloodType.BLOOD_TYPES);
-
-        request.setAttribute("patient", dto);
-        request.getRequestDispatcher("/views/customer/profile.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
         HttpSession session = request.getSession();
-        Users userSession = (Users) session.getAttribute("user");
-        if (userSession == null) {
+        Users user = (Users) session.getAttribute("user");
+
+        if (user == null) {
             response.sendRedirect("login");
             return;
         }
 
-        // Lay du lieu tu form
-        String bloodType = request.getParameter("bloodType");
-        String allergies = request.getParameter("allergies");
-        String medicalHistory = request.getParameter("medicalHistory");
-        String insuranceInfo = request.getParameter("insuranceInfo");
-        String emergencyContactName = request.getParameter("emergencyContactName");
-        String emergencyContactPhone = request.getParameter("emergencyContactPhone");
+        if ("Patient".equalsIgnoreCase(user.getRole())) {
+            PatientDao dao = new PatientDao();
 
-        // Lay patient hien tai
-        Patients current = patientDao.getPatientByUserId(userSession.getUserId());
-        if (current == null) {
-            response.sendRedirect("profile");
-            return;
+            // Lấy thông tin từ form
+            String bloodType = request.getParameter("bloodType");
+            String allergies = request.getParameter("allergies");
+            String insuranceInfo = request.getParameter("insuranceInfo");
+            String medicalHistory = request.getParameter("medicalHistory");
+            String emergencyContactName = request.getParameter("emergencyContactName");
+            String emergencyContactPhone = request.getParameter("emergencyContactPhone");
+
+            // Kiểm tra bệnh nhân theo userId
+            Patients patient = dao.getPatientByUserId(user.getUserId());
+
+            if (patient == null) {
+                // Tạo mới bệnh nhân
+                patient = new Patients();
+                patient.setUserID(user);
+                patient.setBloodType(bloodType);
+                patient.setAllergies(allergies);
+                patient.setInsuranceInfo(insuranceInfo);
+                patient.setMedicalHistory(medicalHistory);
+                patient.setEmergencyContactName(emergencyContactName);
+                patient.setEmergencyContactPhone(emergencyContactPhone);
+
+                dao.insertPatient(patient);
+            } else {
+                // Cập nhật bệnh nhân đã tồn tại
+                patient.setBloodType(bloodType);
+                patient.setAllergies(allergies);
+                patient.setInsuranceInfo(insuranceInfo);
+                patient.setMedicalHistory(medicalHistory);
+                patient.setEmergencyContactName(emergencyContactName);
+                patient.setEmergencyContactPhone(emergencyContactPhone);
+
+                dao.updatePatient(patient);
+            }
+
+            // Lưu lại vào session để hiển thị lại
+            session.setAttribute("patient", dao.getPatientByUserId(user.getUserId()));
+            request.setAttribute("success", "Cập nhật thông tin thành công!");
         }
 
-        // Cap nhat thong tin
-        Patients patientToUpdate = new Patients();
-        patientToUpdate.setPatientID(current.getPatientID());
-        patientToUpdate.setBloodType(bloodType);
-        patientToUpdate.setAllergies(allergies);
-        patientToUpdate.setMedicalHistory(medicalHistory);
-        patientToUpdate.setInsuranceInfo(insuranceInfo);
-        patientToUpdate.setEmergencyContactName(emergencyContactName);
-        patientToUpdate.setEmergencyContactPhone(emergencyContactPhone);
+        request.getRequestDispatcher("views/profile/profile.jsp").forward(request, response);
 
-        boolean success = patientDao.updatePatientProfile(patientToUpdate);
-        
-        if (success) {
-            session.setAttribute("success", "Cap nhat thanh cong!");
-        } else {
-            session.setAttribute("error", "Cap nhat that bai!");
-        }
-
-        response.sendRedirect("profile");
     }
+
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
+
 }

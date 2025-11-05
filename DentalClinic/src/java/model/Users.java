@@ -6,7 +6,7 @@ package model;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 import java.sql.Date;
 
@@ -22,13 +22,14 @@ public class Users {
     private String gender;
     private String address;
     private String role;
-    private boolean isActive;
+    private Boolean isActive;
     private Date createDate;
+    private String image;
 
     public Users() {
     }
 
-    public Users(int userId, String userName, String passWord, String email, String fullName, String phoneNumber, Date dateOfBirth, String gender, String address, String role, boolean isActive, Date createDate) {
+    public Users(int userId, String userName, String passWord, String email, String fullName, String phoneNumber, Date dateOfBirth, String gender, String address, String role, Boolean isActive, Date createDate, String image) {
         this.userId = userId;
         this.userName = userName;
         this.passWord = passWord;
@@ -41,6 +42,7 @@ public class Users {
         this.role = role;
         this.isActive = isActive;
         this.createDate = createDate;
+        this.image = image;
     }
 
     public int getUserId() {
@@ -123,11 +125,11 @@ public class Users {
         this.role = role;
     }
 
-    public boolean isIsActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
+    public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
     }
 
@@ -139,9 +141,16 @@ public class Users {
         this.createDate = createDate;
     }
 
-    @Override
-    public String toString() {
-        return "Users{" + "userId=" + userId + ", userName=" + userName + ", passWord=" + passWord + ", email=" + email + ", fullName=" + fullName + ", phoneNumber=" + phoneNumber + ", dateOfBirth=" + dateOfBirth + ", gender=" + gender + ", address=" + address + ", role=" + role + ", isActive=" + isActive + ", createDate=" + createDate + '}';
+    public String getImage() {
+        return image;
     }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+    
+    
+
+    
 
 }

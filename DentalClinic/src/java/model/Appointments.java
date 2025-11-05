@@ -8,7 +8,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class Appointments {
 
@@ -105,11 +105,11 @@ public class Appointments {
         this.status = status;
     }
 
-    public String getNotes() {
+    public String getes() {
         return notes;
     }
 
-    public void setNotes(String notes) {
+    public void setes(String notes) {
         this.notes = notes;
     }
 

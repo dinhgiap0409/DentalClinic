@@ -8,7 +8,7 @@ import java.sql.*;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class ScheduleExceptionsDto {
 

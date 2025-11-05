@@ -1,7 +1,7 @@
 <%-- 
     Document   : banner
     Created on : Sep 16, 2025, 11:52:59 PM
-    Author     : Nguyen Dinh Giap
+    Author     : 
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

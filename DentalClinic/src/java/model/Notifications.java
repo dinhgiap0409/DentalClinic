@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 
 /**
  *
- * @author Nguyen Dinh Giap
+ * @author Nguyen Dang Khang 
  */
 public class Notifications {
 
@@ -35,11 +35,11 @@ public class Notifications {
         this.scheduledDate = scheduledDate;
     }
 
-    public int getNotificationId() {
+    public int getificationId() {
         return notificationId;
     }
 
-    public void setNotificationId(int notificationId) {
+    public void setificationId(int notificationId) {
         this.notificationId = notificationId;
     }
 

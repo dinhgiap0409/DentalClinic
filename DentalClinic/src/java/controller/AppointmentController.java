@@ -105,7 +105,7 @@ public class AppointmentController extends HttpServlet {
             a.setStartTime(start);
             a.setEndTime(end);
             a.setStatus("Scheduled");
-            a.setNotes(req.getParameter("notes"));
+            a.setes(req.getParameter("notes"));
 
             Integer newId = apptDao.insertAppointment(a);
 

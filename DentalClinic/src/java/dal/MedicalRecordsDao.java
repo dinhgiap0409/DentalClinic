@@ -8,7 +8,7 @@ import model.Appointments;
 import model.MedicalRecords;
 /**
  *
- * @author Nguyen Dang Khang
+ * @author Nguyen Dang Khang 
  */
 public class MedicalRecordsDao extends DBContext{
     /**

@@ -4,10 +4,8 @@
  */
 package controller.BookAppointment;
 
-import dal.AppointmentsDao;
 import dal.ScheduleDao;
 import dal.ScheduleExceptionsDao;
-import dto.AppointmentDto;
 import dto.ScheduleDto;
 import dto.ScheduleExceptionsDto;
 import java.io.IOException;
@@ -18,8 +16,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import model.Appointments;
+import java.util.Map;
 import model.ScheduleExceptions;
 import model.Schedules;
 
@@ -27,84 +28,98 @@ import model.Schedules;
 public class DoctorWorkScheduleController extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
         try {
-            //Nhận doctorId và ngày
-            int doctorId = Integer.parseInt(request.getParameter("doctorId"));
-            int serviceId = Integer.parseInt(request.getParameter("serviceId"));
+            int doctorId = Integer.parseInt(req.getParameter("doctorId"));
+            int serviceId = Integer.parseInt(req.getParameter("serviceId"));
 
-            String dateParam = request.getParameter("date");
-            LocalDate selectedDate = (dateParam != null)
-                    ? LocalDate.parse(dateParam)
-                    : LocalDate.now();
+            // Tuần hiển thị: mặc định tuần hiện tại; có thể chỉnh bằng ?weekOffset=-1/0/1...
+            int weekOffset = 0;
+            try {
+                String off = req.getParameter("weekOffset");
+                if (off != null) {
+                    weekOffset = Integer.parseInt(off);
+                }
+            } catch (NumberFormatException ignore) {
+            }
 
-            int dayOfWeek = selectedDate.getDayOfWeek().getValue();
+            LocalDate today = LocalDate.now();
+            LocalDate monday = today.with(java.time.DayOfWeek.MONDAY).plusWeeks(weekOffset);
+            LocalDate sunday = monday.plusDays(6);
 
-            //Lấy lịch làm việc (Schedules)
             ScheduleDao scheduleDAO = new ScheduleDao();
-            ScheduleDto scheduleFilter = new ScheduleDto();
-            scheduleFilter.setDoctorId(doctorId);
-            scheduleFilter.setDayOfWeek(dayOfWeek);
-            scheduleFilter.setIsAvailable(true);
-            List<Schedules> baseSchedules = scheduleDAO.filterSchedules(scheduleFilter);
-
-            //Lấy danh sách ngoại lệ (ScheduleExceptions)
             ScheduleExceptionsDao exDao = new ScheduleExceptionsDao();
-            ScheduleExceptionsDto exFilter = new ScheduleExceptionsDto();
-            exFilter.setDoctorId(doctorId);
-            exFilter.setExceptionDate(java.sql.Date.valueOf(selectedDate));
-            List<ScheduleExceptions> exceptions = exDao.filterScheduleExceptions(exFilter);
 
-            //Lọc slot trống (loại ngày nghỉ)
-            List<Schedules> availableSlots = new ArrayList<>();
-            boolean isDayOff = exceptions.stream().anyMatch(ex -> !ex.isIsWorkingDay());
-            if (!isDayOff) {
-                for (Schedules schedule : baseSchedules) {
-                    boolean overlapped = exceptions.stream().anyMatch(ex
+            // Cache base schedules theo dayOfWeek (1..7)
+            Map<Integer, List<Schedules>> baseByDow = new HashMap<>();
+
+            // Kết quả: date -> slots available
+            Map<LocalDate, List<Schedules>> availableByDate = new LinkedHashMap<>();
+
+            for (LocalDate d = monday; !d.isAfter(sunday); d = d.plusDays(1)) {
+                int dow = d.getDayOfWeek().getValue(); // 1=Mon..7=Sun
+
+                // Base schedules cho thứ dow
+                List<Schedules> base = baseByDow.computeIfAbsent(dow, k -> {
+                    ScheduleDto f = new ScheduleDto();
+                    f.setDoctorId(doctorId);
+                    f.setDayOfWeek(k);
+                    f.setIsAvailable(true);
+                    List<Schedules> list = scheduleDAO.filterSchedules(f);
+                    list.sort(Comparator.comparing(Schedules::getStartTime));
+                    return list;
+                });
+
+                if (base.isEmpty()) {
+                    availableByDate.put(d, List.of());
+                    continue;
+                }
+
+                // Exceptions trong ngày d
+                ScheduleExceptionsDto exF = new ScheduleExceptionsDto();
+                exF.setDoctorId(doctorId);
+                exF.setExceptionDate(java.sql.Date.valueOf(d));
+                List<ScheduleExceptions> exs = exDao.filterScheduleExceptions(exF);
+
+                // Nghỉ cả ngày?
+                boolean dayOff = exs.stream().anyMatch(ex -> !ex.isIsWorkingDay());
+                if (dayOff) {
+                    availableByDate.put(d, List.of());
+                    continue;
+                }
+
+                // Loại các slot trùng với exception time-range
+                List<Schedules> afterEx = new ArrayList<>();
+                for (Schedules s : base) {
+                    boolean overlapEx = exs.stream().anyMatch(ex
                             -> ex.getStartTime() != null && ex.getEndTime() != null
-                            && ex.getStartTime().before(schedule.getEndTime())
-                            && ex.getEndTime().after(schedule.getStartTime())
+                            && s.getStartTime().before(ex.getEndTime())
+                            && s.getEndTime().after(ex.getStartTime())
                     );
-                    if (!overlapped) {
-                        availableSlots.add(schedule);
+                    if (!overlapEx) {
+                        afterEx.add(s);
                     }
                 }
+
+                afterEx.sort(Comparator.comparing(Schedules::getStartTime));
+                availableByDate.put(d, afterEx);
             }
 
-            //Kiểm tra slot đã được đặt trong Appointments
-            AppointmentsDao appDao = new AppointmentsDao();
-            AppointmentDto appFilter = new AppointmentDto();
-            appFilter.setDoctorId(doctorId);
-            appFilter.setAppointmentDate(java.sql.Date.valueOf(selectedDate));
-            appFilter.setStatus("CONFIRMED");
+            req.setAttribute("availableByDate", availableByDate);
+            req.setAttribute("doctorId", doctorId);
+            req.setAttribute("serviceId", serviceId);
+            req.setAttribute("monday", monday);
+            req.setAttribute("sunday", sunday);
+            req.setAttribute("weekOffset", weekOffset);
 
-            List<Appointments> bookedAppointments = appDao.filterAppointment(appFilter);
-
-            List<Schedules> finalAvailableSlots = new ArrayList<>();
-
-            for (Schedules slot : availableSlots) {
-                boolean hasBooked = bookedAppointments.stream().anyMatch(app
-                        -> app.getStartTime().before(slot.getEndTime())
-                        && app.getEndTime().after(slot.getStartTime())
-                );
-                if (!hasBooked) {
-                    finalAvailableSlots.add(slot);
-                }
-            }
-
-            //Trả kết quả về view
-            request.setAttribute("availableSlots", finalAvailableSlots);
-            request.setAttribute("serviceId", serviceId);
-            request.setAttribute("selectedDate", selectedDate);
-            request.setAttribute("doctorId", doctorId);
-            request.getRequestDispatcher("/views/guest/doctorSchedule.jsp").forward(request, response);
+            req.getRequestDispatcher("/views/guest/doctorSchedule.jsp").forward(req, resp);
 
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("errorMessage", "Không thể tải lịch làm việc của bác sĩ.");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            req.setAttribute("errorMessage", "Không thể tải lịch làm việc của bác sĩ.");
+            req.getRequestDispatcher("/error.jsp").forward(req, resp);
         }
     }
 
