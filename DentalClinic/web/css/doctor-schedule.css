@@ -1,0 +1,182 @@
+/* ===============================
+   FORM CHỌN NGÀY & LỊCH BÁC SĨ
+   =============================== */
+
+.booking-form-container {
+    margin-top: 15px;
+    background: #f8faff;
+    border: 1px solid #e0e7ff;
+    border-radius: 10px;
+    padding: 16px;
+    box-shadow: 0 2px 5px rgba(31, 60, 136, 0.08);
+    transition: all 0.3s ease;
+}
+
+.booking-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ===============================
+   FORM CHỌN NGÀY
+   =============================== */
+
+.date-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #1f3c88;
+}
+
+/* Input chọn ngày */
+.date-picker {
+    padding: 8px 12px;
+    border: 1px solid #b8c2f2;
+    border-radius: 6px;
+    background-color: #fff;
+    font-size: 15px;
+    color: #333;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.date-picker:hover {
+    border-color: #889ef7;
+}
+
+.date-picker:focus {
+    border-color: #1f3c88;
+    box-shadow: 0 0 0 2px rgba(31, 60, 136, 0.15);
+}
+
+/* ===============================
+   CÁC NÚT
+   =============================== */
+
+/* Nút xem lịch */
+.btn-view-schedule {
+    background: #1f3c88;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.25s ease, transform 0.1s ease;
+}
+
+.btn-view-schedule:hover {
+    background: #2f52b3;
+    transform: translateY(-1px);
+}
+
+.btn-view-schedule:active {
+    background: #182f6a;
+    transform: translateY(0);
+}
+
+/* Nút xác nhận đặt lịch */
+.btn-confirm {
+    display: inline-block;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 9px 16px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.25s ease, transform 0.1s ease;
+}
+
+.btn-confirm:hover {
+    background: #23923d;
+    transform: translateY(-1px);
+}
+
+.btn-confirm:active {
+    background: #1b7431;
+    transform: translateY(0);
+}
+
+/* ===============================
+   LỊCH LÀM VIỆC
+   =============================== */
+
+.schedule-container {
+    background-color: #fff;
+    border: 1px solid #dce3f9;
+    border-radius: 8px;
+    padding: 14px;
+    min-height: 60px;
+    animation: fadeIn 0.3s ease;
+}
+
+.schedule-container .loading {
+    text-align: center;
+    color: #555;
+    font-style: italic;
+    padding: 10px 0;
+}
+
+/* Slot chọn giờ */
+.slot-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.slot-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f4ff;
+    border: 1px solid #d3dcfb;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.slot-item:hover {
+    background: #e4e9ff;
+}
+
+.slot-item input[type="radio"] {
+    accent-color: #1f3c88;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   RESPONSIVE
+   =============================== */
+
+@media (max-width: 768px) {
+    .date-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-view-schedule, .btn-confirm {
+        width: 100%;
+        text-align: center;
+    }
+
+    .slot-list {
+        flex-direction: column;
+    }
+}
