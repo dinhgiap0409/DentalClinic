@@ -1,0 +1,164 @@
+body {
+  background:#f7f9fc;
+}
+.container {
+  max-width:1100px;
+  margin:24px auto;
+  padding:0 16px;
+}
+h1 {
+  color:#0d6efd;
+  margin-bottom:16px;
+}
+
+.filters {
+  background:#fff;
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+  margin-bottom:18px;
+}
+.filters form {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+}
+.filters .field {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.filters label {
+  font-size:13px;
+  color:#666;
+}
+.filters input,
+.filters select {
+  padding:8px 10px;
+  border:1px solid #d9d9d9;
+  border-radius:8px;
+  min-width:180px;
+}
+.filters .actions {
+  margin-left:auto;
+  display:flex;
+  gap:8px;
+}
+
+.btn {
+  display:inline-block;
+  padding:10px 14px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+}
+.btn-primary {
+  background:#0d6efd;
+  color:#fff;
+  border:2px solid #0d6efd;
+}
+.btn-primary:hover {
+  background:#0b5ed7;
+  border-color:#0b5ed7;
+}
+.btn-ghost {
+  background:#fff;
+  color:#0d6efd;
+  border:2px solid #0d6efd;
+}
+.btn-ghost:hover {
+  background:#e9f2ff;
+}
+
+.list {
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:14px;
+}
+.card {
+  background:#fff;
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 2px 12px rgba(0,0,0,.06);
+}
+.card-head {
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+.doc-serv {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+}
+.doc-name {
+  font-weight:700;
+  font-size:16px;
+}
+.serv-name {
+  color:#555;
+}
+.right {
+  text-align:right;
+  min-width:200px;
+}
+.dt {
+  font-weight:600;
+}
+.status-badge {
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.status-Rescheduled {
+  background:#fff8e1;
+  color:#ad7b00;
+}
+
+
+.status-Scheduled  {
+  background:#fff8e1;
+  color:#ad7b00;
+}
+.status-Confirmed  {
+  background:#e6f4ff;
+  color:#0b5ed7;
+}
+.status-Completed  {
+  background:#e8f5e9;
+  color:#1b5e20;
+}
+.status-Cancelled  {
+  background:#ffebee;
+  color:#b71c1c;
+}
+
+
+.split {
+  height:1px;
+  background:#edf0f5;
+  margin:12px 0;
+}
+.sections {
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:10px;
+}
+.section-title {
+  font-weight:700;
+  margin-bottom:6px;
+  color:#0d6efd;
+}
+.muted {
+  color:#666;
+}
+
+@media (max-width:768px) {
+  .right { text-align:left; }
+  .filters .actions { margin-left:0; width:100%; }
+  .filters form { gap:10px; }
+}
