@@ -24,6 +24,10 @@ public class Doctor {
     public Doctor() {
     }
 
+    public Doctor(int doctorID) {
+        this.doctorID = doctorID;
+    }
+
     public Doctor(int doctorID, Users userId, String specialization, String licenseNumber, int yearsOfExperience, String education, String biography, BigDecimal consultationFee) {
         this.doctorID = doctorID;
         this.userId = userId;

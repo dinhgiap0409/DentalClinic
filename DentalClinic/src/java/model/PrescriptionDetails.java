@@ -12,21 +12,21 @@ public class PrescriptionDetails {
 
     private int prescriptionDetailId;
     private Prescriptions prescriptionId;        // PrescriptionID (FK -> Prescriptions)
-    private MedicalRecords medicationId;          // MedicationID (FK -> Medications)
+    private Medications medications;          // MedicationID (FK -> Medications)
     private String dosage;
     private int quantity;
     private String duration;
 
-    public PrescriptionDetails(int prescriptionDetailId, Prescriptions prescriptionId, MedicalRecords medicationId, String dosage, int quantity, String duration) {
+    public PrescriptionDetails() {
+    }
+
+    public PrescriptionDetails(int prescriptionDetailId, Prescriptions prescriptionId, Medications medications, String dosage, int quantity, String duration) {
         this.prescriptionDetailId = prescriptionDetailId;
         this.prescriptionId = prescriptionId;
-        this.medicationId = medicationId;
+        this.medications = medications;
         this.dosage = dosage;
         this.quantity = quantity;
         this.duration = duration;
-    }
-
-    public PrescriptionDetails() {
     }
 
     public int getPrescriptionDetailId() {
@@ -45,12 +45,12 @@ public class PrescriptionDetails {
         this.prescriptionId = prescriptionId;
     }
 
-    public MedicalRecords getMedicationId() {
-        return medicationId;
+    public Medications getMedications() {
+        return medications;
     }
 
-    public void setMedicationId(MedicalRecords medicationId) {
-        this.medicationId = medicationId;
+    public void setMedications(Medications medications) {
+        this.medications = medications;
     }
 
     public String getDosage() {
@@ -76,10 +76,8 @@ public class PrescriptionDetails {
     public void setDuration(String duration) {
         this.duration = duration;
     }
+    
+    
 
-    @Override
-    public String toString() {
-        return "PrescriptionDetails{" + "prescriptionDetailId=" + prescriptionDetailId + ", prescriptionId=" + prescriptionId + ", medicationId=" + medicationId + ", dosage=" + dosage + ", quantity=" + quantity + ", duration=" + duration + '}';
-    }
-
+    
 }

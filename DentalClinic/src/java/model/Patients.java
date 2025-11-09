@@ -21,6 +21,10 @@ public class Patients {
 
     public Patients() {
     }
+    
+    public Patients(int patientID) {
+        this.patientID = patientID;    
+    }
 
     public Patients(int patientID, Users userID, String bloodType, String allergies, String medicalHistory, String insuranceInfo, String emergencyContactName, String emergencyContactPhone) {
         this.patientID = patientID;

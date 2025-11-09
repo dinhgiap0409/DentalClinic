@@ -1,0 +1,62 @@
+/* -----------------------------
+   Appointment Detail Page
+----------------------------- */
+
+.detail-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.detail-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.detail-header h2 {
+    color: #2d3748;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.info-group {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dashed #ccc;
+}
+
+.info-group strong {
+    color: #333;
+    width: 35%;
+}
+
+.info-group span {
+    width: 60%;
+    text-align: right;
+    color: #444;
+}
+
+
+.back-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.btn-back {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #4a90e2;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.2s;
+}
+
+.btn-back:hover {
+    background-color: #357ABD;
+}

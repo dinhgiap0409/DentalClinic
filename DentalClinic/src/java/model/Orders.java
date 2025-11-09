@@ -3,29 +3,32 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package model;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+
 /**
  *
  * @author Nguyen Dinh Giap
  */
 public class Orders {
-      private int orderId;            
-    private int patientId;           // PatientID (FK -> Patients)
-    private Integer prescriptionId;  
-    private Timestamp orderDate;     
-    private BigDecimal totalAmount;  
-    private String status;           
-    private String paymentMethod;    
-    private String paymentStatus;  
+
+    private int orderId;
+    private Patients patients;           // PatientID (FK -> Patients)
+    private Prescriptions prescriptions;
+    private Timestamp orderDate;
+    private BigDecimal totalAmount;
+    private String status;
+    private String paymentMethod;
+    private String paymentStatus;
 
     public Orders() {
     }
 
-    public Orders(int orderId, int patientId, Integer prescriptionId, Timestamp orderDate, BigDecimal totalAmount, String status, String paymentMethod, String paymentStatus) {
+    public Orders(int orderId, Patients patients, Prescriptions prescriptions, Timestamp orderDate, BigDecimal totalAmount, String status, String paymentMethod, String paymentStatus) {
         this.orderId = orderId;
-        this.patientId = patientId;
-        this.prescriptionId = prescriptionId;
+        this.patients = patients;
+        this.prescriptions = prescriptions;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
         this.status = status;
@@ -41,20 +44,20 @@ public class Orders {
         this.orderId = orderId;
     }
 
-    public int getPatientId() {
-        return patientId;
+    public Patients getPatients() {
+        return patients;
     }
 
-    public void setPatientId(int patientId) {
-        this.patientId = patientId;
+    public void setPatients(Patients patients) {
+        this.patients = patients;
     }
 
-    public Integer getPrescriptionId() {
-        return prescriptionId;
+    public Prescriptions getPrescriptions() {
+        return prescriptions;
     }
 
-    public void setPrescriptionId(Integer prescriptionId) {
-        this.prescriptionId = prescriptionId;
+    public void setPrescriptions(Prescriptions prescriptions) {
+        this.prescriptions = prescriptions;
     }
 
     public Timestamp getOrderDate() {
@@ -96,10 +99,10 @@ public class Orders {
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
-
-    @Override
-    public String toString() {
-        return "Orders{" + "orderId=" + orderId + ", patientId=" + patientId + ", prescriptionId=" + prescriptionId + ", orderDate=" + orderDate + ", totalAmount=" + totalAmount + ", status=" + status + ", paymentMethod=" + paymentMethod + ", paymentStatus=" + paymentStatus + '}';
-    }
     
+    
+    
+
+    
+
 }

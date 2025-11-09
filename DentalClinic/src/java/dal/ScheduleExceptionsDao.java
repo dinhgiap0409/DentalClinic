@@ -48,7 +48,7 @@ public class ScheduleExceptionsDao extends DBContext {
 
         StringBuilder sql = new StringBuilder("""
         SELECT ExceptionID, DoctorID, ExceptionDate, IsWorkingDay,
-               StartTime, EndTime, MaxAppointments, CreatedDate
+               StartTime, EndTime, MaxAppointments
         FROM dbo.ScheduleExceptions
         WHERE 1=1
     """);

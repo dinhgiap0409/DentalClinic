@@ -12,6 +12,7 @@ import model.Appointments;
 import model.Patients;
 import model.Doctor;
 import model.Service;
+import model.Users;
 
 /**
  *
@@ -19,72 +20,231 @@ import model.Service;
  */
 public class AppointmentsDao extends DBContext {
 
+    public boolean updateAppointment(Appointments a) {
+        if (a == null || a.getAppointmentId() <= 0) {
+            return false;
+        }
+
+        String sql = """
+        UPDATE dbo.Appointments
+        SET 
+            PatientID = ?, 
+            DoctorID = ?, 
+            ServiceID = ?, 
+            AppointmentDate = ?, 
+            StartTime = ?, 
+            EndTime = ?, 
+            Status = ?, 
+            Notes = ?, 
+            UpdatedDate = GETDATE()
+        WHERE AppointmentID = ?
+    """;
+
+        try (Connection conn = new DBContext().connection; PreparedStatement ps = conn.prepareStatement(sql)) {
+            int i = 1;
+
+            // Gán các giá trị cho cột
+            if (a.getPatientId() != null) {
+                ps.setInt(i++, a.getPatientId().getPatientID());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getDoctorId() != null) {
+                ps.setInt(i++, a.getDoctorId().getDoctorID());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getServiceId() != null) {
+                ps.setInt(i++, a.getServiceId().getServiceId());
+            } else {
+                ps.setNull(i++, Types.INTEGER);
+            }
+
+            if (a.getAppointmentDate() != null) {
+                ps.setDate(i++, a.getAppointmentDate());
+            } else {
+                ps.setNull(i++, Types.DATE);
+            }
+
+            if (a.getStartTime() != null) {
+                ps.setTime(i++, a.getStartTime());
+            } else {
+                ps.setNull(i++, Types.TIME);
+            }
+
+            if (a.getEndTime() != null) {
+                ps.setTime(i++, a.getEndTime());
+            } else {
+                ps.setNull(i++, Types.TIME);
+            }
+
+            if (a.getStatus() != null && !a.getStatus().isBlank()) {
+                ps.setString(i++, a.getStatus().trim());
+            } else {
+                ps.setNull(i++, Types.NVARCHAR);
+            }
+
+            if (a.getNotes() != null && !a.getNotes().isBlank()) {
+                ps.setString(i++, a.getNotes());
+            } else {
+                ps.setNull(i++, Types.NVARCHAR);
+            }
+
+            ps.setInt(i++, a.getAppointmentId());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     //lay lich hen qua id
     public Appointments getAppointmentsById(int appointmentId) {
         String sql = """
-            SELECT AppointmentID, PatientID, DoctorID, ServiceID,
-                   AppointmentDate, StartTime, EndTime, Status, Notes, CreatedDate, UpdatedDate
-            FROM dbo.Appointments
-            WHERE AppointmentID = ?
-        """;
+        SELECT 
+            ap.AppointmentID,
+            ap.PatientID,
+            ap.DoctorID,
+            ap.ServiceID,
+            ap.AppointmentDate,
+            ap.StartTime,
+            ap.EndTime,
+            ap.Status,
+            ap.Notes,
+            ap.CreatedDate,
+            ap.UpdatedDate,
+            u_patient.FullName AS PatientName,
+            u_patient.PhoneNumber AS PatientPhone,
+            u_patient.DateOfBirth AS PatientDOB,
+            u_patient.Gender AS PatientGender,
+            u_patient.Address AS PatientAddress,
+            u_doctor.FullName AS DoctorName,
+            d.Specialization AS DoctorSpecialization,
+            d.ConsultationFee AS DoctorConsultationFee,
+            s.ServiceName
+        FROM dbo.Appointments ap
+        JOIN dbo.Patients p ON ap.PatientID = p.PatientID
+        JOIN dbo.Users u_patient ON p.UserID = u_patient.UserID
+        JOIN dbo.Doctors d ON ap.DoctorID = d.DoctorID
+        JOIN dbo.Users u_doctor ON d.UserID = u_doctor.UserID
+        JOIN dbo.Services s ON ap.ServiceID = s.ServiceID
+        WHERE ap.AppointmentID = ?
+    """;
+
         try (Connection connect = new DBContext().connection; PreparedStatement ps = connect.prepareStatement(sql)) {
 
             ps.setInt(1, appointmentId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return mapRow(rs);
+                    return mapRowWithJoin(rs);
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
+    // Lọc danh sách lịch hẹn
     public List<Appointments> filterAppointment(AppointmentDto a) {
         List<Appointments> list = new ArrayList<>();
+
         StringBuilder sql = new StringBuilder("""
-            SELECT AppointmentID, PatientID, DoctorID, ServiceID,
-            AppointmentDate, StartTime, EndTime, Status, Notes, CreatedDate, UpdatedDate
-            FROM dbo.Appointments WHERE 1 = 1""");
+        SELECT 
+            ap.AppointmentID,
+            ap.PatientID,
+            ap.DoctorID,
+            ap.ServiceID,
+            ap.AppointmentDate,
+            ap.StartTime,
+            ap.EndTime,
+            ap.Status,
+            ap.Notes,
+            ap.CreatedDate,
+            ap.UpdatedDate,
+            u_patient.FullName AS PatientName,
+            u_patient.PhoneNumber AS PatientPhone,
+            u_patient.DateOfBirth AS PatientDOB,
+            u_patient.Gender AS PatientGender,
+            u_patient.Address AS PatientAddress,
+            u_doctor.FullName AS DoctorName,
+            d.Specialization AS DoctorSpecialization,
+            d.ConsultationFee AS DoctorConsultationFee,
+            s.ServiceName
+        FROM dbo.Appointments ap
+        JOIN dbo.Patients p      ON ap.PatientID = p.PatientID
+        JOIN dbo.Users u_patient ON p.UserID = u_patient.UserID
+        JOIN dbo.Doctors d       ON ap.DoctorID  = d.DoctorID
+        JOIN dbo.Users u_doctor  ON d.UserID     = u_doctor.UserID
+        JOIN dbo.Services s      ON ap.ServiceID = s.ServiceID
+        WHERE 1=1
+    """);
+
+        // ===== Lọc theo ID =====
         if (a.getPatientId() != null) {
-            sql.append(" AND PatientID = ?\n");
+            sql.append(" AND ap.PatientID = ? ");
         }
         if (a.getDoctorId() != null) {
-            sql.append(" AND DoctorID = ?\n");
+            sql.append(" AND ap.DoctorID = ? ");
         }
         if (a.getServiceId() != null) {
-            sql.append(" AND ServiceID = ?\n");
+            sql.append(" AND ap.ServiceID = ? ");
         }
+
+        // ===== Lọc mềm (LIKE) =====
+        if (a.getPatientName() != null && !a.getPatientName().isBlank()) {
+            sql.append(" AND u_patient.FullName LIKE ? ");
+        }
+        if (a.getPhoneNumber() != null && !a.getPhoneNumber().isBlank()) {
+            sql.append(" AND u_patient.PhoneNumber LIKE ? ");
+        }
+        if (a.getDoctorName() != null && !a.getDoctorName().isBlank()) {
+            sql.append(" AND u_doctor.FullName LIKE ? ");
+        }
+        if (a.getServiceName() != null && !a.getServiceName().isBlank()) {
+            sql.append(" AND s.ServiceName LIKE ? ");
+        }
+
+        // ===== Lọc theo ngày =====
         if (a.getAppointmentDate() != null) {
-            sql.append(" AND AppointmentDate = ?\n");
-        }
-        if (a.getStartTime() != null) {
-            sql.append(" AND StartTime >= ?\n");
-        }
-        if (a.getEndTime() != null) {
-            sql.append(" AND EndTime <= ?\n");
-        }
-        if (a.getStatus() != null && !a.getStatus().isBlank()) {
-            sql.append(" AND Status = ?\n");
-        }
-        if (a.getCreatedDate() != null) {
-            sql.append(" AND CreatedDate >= ?\n");
-        }
-        if (a.isSortMode()) {
-            sql.append(" ORDER BY AppointmentID ASC\n");
-        }
-        if (a.isPaginationMode()) {
-            if (!a.isSortMode()) {
-                sql.append(" ORDER BY AppointmentID ASC\n");
+            sql.append(" AND ap.AppointmentDate = ? ");
+        } else {
+            if (a.getAppointmentDateFrom() != null) {
+                sql.append(" AND ap.AppointmentDate >= ? ");
             }
-            sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+            if (a.getAppointmentDateTo() != null) {
+                sql.append(" AND ap.AppointmentDate <= ? ");
+            }
         }
-        //PatientID, DoctorID, ServiceID,
-        //AppointmentDate, StartTime, EndTime, Status, CreatedDate
+
+        // ===== Trạng thái =====
+        if (a.getStatus() != null && !a.getStatus().isBlank()) {
+            sql.append(" AND ap.Status = ? ");
+        }
+
+        // ===== Sắp xếp =====
+        if (a.isSortMode()) {
+            sql.append(" ORDER BY ap.AppointmentDate DESC, ap.StartTime ASC ");
+        } else {
+            sql.append(" ORDER BY ap.AppointmentDate DESC ");
+        }
+
+        // ===== Phân trang =====
+        if (a.isPaginationMode()) {
+            sql.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY ");
+        }
+
         try (Connection connection = new DBContext().connection; PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+
             int i = 1;
+
             if (a.getPatientId() != null) {
                 ps.setInt(i++, a.getPatientId());
             }
@@ -94,62 +254,163 @@ public class AppointmentsDao extends DBContext {
             if (a.getServiceId() != null) {
                 ps.setInt(i++, a.getServiceId());
             }
+
+            if (a.getPatientName() != null && !a.getPatientName().isBlank()) {
+                ps.setString(i++, "%" + a.getPatientName().trim() + "%");
+            }
+            if (a.getPhoneNumber() != null && !a.getPhoneNumber().isBlank()) {
+                ps.setString(i++, "%" + a.getPhoneNumber().trim() + "%");
+            }
+            if (a.getDoctorName() != null && !a.getDoctorName().isBlank()) {
+                ps.setString(i++, "%" + a.getDoctorName().trim() + "%");
+            }
+            if (a.getServiceName() != null && !a.getServiceName().isBlank()) {
+                ps.setString(i++, "%" + a.getServiceName().trim() + "%");
+            }
+
             if (a.getAppointmentDate() != null) {
                 ps.setDate(i++, a.getAppointmentDate());
+            } else {
+                if (a.getAppointmentDateFrom() != null) {
+                    ps.setDate(i++, a.getAppointmentDateFrom());
+                }
+                if (a.getAppointmentDateTo() != null) {
+                    ps.setDate(i++, a.getAppointmentDateTo());
+                }
             }
-            if (a.getStartTime() != null) {
-                ps.setTime(i++, a.getStartTime());
-            }
-            if (a.getEndTime() != null) {
-                ps.setTime(i++, a.getEndTime());
-            }
+
             if (a.getStatus() != null && !a.getStatus().isBlank()) {
                 ps.setString(i++, a.getStatus().trim());
             }
-            if (a.getCreatedDate() != null) {
-                ps.setDate(i++, a.getCreatedDate());
-            }
 
             if (a.isPaginationMode()) {
-                int page = Math.max(1, a.getPage());
-                int size = Math.max(1, a.getSize());
+                int page = Math.max(a.getPage(), 1);
+                int size = Math.max(a.getSize(), 1);
                 ps.setInt(i++, (page - 1) * size);
                 ps.setInt(i++, size);
             }
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    list.add(mapRow(rs));
+                    list.add(mapRowWithJoin(rs));
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
 
-    private Appointments mapRow(ResultSet rs) throws SQLException {
+    public int countAppointments(AppointmentDto a) {
+        StringBuilder sql = new StringBuilder("""
+        SELECT COUNT(1)
+        FROM dbo.Appointments ap
+        JOIN dbo.Patients p      ON ap.PatientID = p.PatientID
+        JOIN dbo.Users u_patient ON p.UserID     = u_patient.UserID
+        JOIN dbo.Doctors d       ON ap.DoctorID  = d.DoctorID
+        JOIN dbo.Users u_doctor  ON d.UserID     = u_doctor.UserID
+        JOIN dbo.Services s      ON ap.ServiceID = s.ServiceID
+        WHERE 1=1
+    """);
+
+        if (a.getPatientId() != null) {
+            sql.append(" AND ap.PatientID = ? ");
+        }
+        if (a.getDoctorId() != null) {
+            sql.append(" AND ap.DoctorID = ? ");
+        }
+        if (a.getServiceId() != null) {
+            sql.append(" AND ap.ServiceID = ? ");
+        }
+        if (a.getPatientName() != null && !a.getPatientName().isBlank()) {
+            sql.append(" AND u_patient.FullName LIKE ? ");
+        }
+        if (a.getPhoneNumber() != null && !a.getPhoneNumber().isBlank()) {
+            sql.append(" AND u_patient.PhoneNumber LIKE ? ");
+        }
+        if (a.getDoctorName() != null && !a.getDoctorName().isBlank()) {
+            sql.append(" AND u_doctor.FullName LIKE ? ");
+        }
+        if (a.getServiceName() != null && !a.getServiceName().isBlank()) {
+            sql.append(" AND s.ServiceName LIKE ? ");
+        }
+
+        if (a.getAppointmentDate() != null) {
+            sql.append(" AND ap.AppointmentDate = ? ");
+        } else {
+            if (a.getAppointmentDateFrom() != null) {
+                sql.append(" AND ap.AppointmentDate >= ? ");
+            }
+            if (a.getAppointmentDateTo() != null) {
+                sql.append(" AND ap.AppointmentDate <= ? ");
+            }
+        }
+
+        if (a.getStatus() != null && !a.getStatus().isBlank()) {
+            sql.append(" AND ap.Status = ? ");
+        }
+
+        try (Connection connection = new DBContext().connection; PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+
+            int i = 1;
+
+            if (a.getPatientId() != null) {
+                ps.setInt(i++, a.getPatientId());
+            }
+            if (a.getDoctorId() != null) {
+                ps.setInt(i++, a.getDoctorId());
+            }
+            if (a.getServiceId() != null) {
+                ps.setInt(i++, a.getServiceId());
+            }
+
+            if (a.getPatientName() != null && !a.getPatientName().isBlank()) {
+                ps.setString(i++, "%" + a.getPatientName().trim() + "%");
+            }
+            if (a.getPhoneNumber() != null && !a.getPhoneNumber().isBlank()) {
+                ps.setString(i++, "%" + a.getPhoneNumber().trim() + "%");
+            }
+            if (a.getDoctorName() != null && !a.getDoctorName().isBlank()) {
+                ps.setString(i++, "%" + a.getDoctorName().trim() + "%");
+            }
+            if (a.getServiceName() != null && !a.getServiceName().isBlank()) {
+                ps.setString(i++, "%" + a.getServiceName().trim() + "%");
+            }
+
+            if (a.getAppointmentDate() != null) {
+                ps.setDate(i++, a.getAppointmentDate());
+            } else {
+                if (a.getAppointmentDateFrom() != null) {
+                    ps.setDate(i++, a.getAppointmentDateFrom());
+                }
+                if (a.getAppointmentDateTo() != null) {
+                    ps.setDate(i++, a.getAppointmentDateTo());
+                }
+            }
+
+            if (a.getStatus() != null && !a.getStatus().isBlank()) {
+                ps.setString(i++, a.getStatus().trim());
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    private Appointments mapRowWithJoin(ResultSet rs) throws SQLException {
         Appointments appointment = new Appointments();
+
         appointment.setAppointmentId(rs.getInt("AppointmentID"));
-        Object patientIdObj = rs.getObject("PatientID");
-        if (patientIdObj != null) {
-            Patients patient = new Patients();
-            patient.setPatientID((Integer) patientIdObj);
-            appointment.setPatientId(patient);
-        }
-        Object doctorIdObj = rs.getObject("DoctorID");
-        if (doctorIdObj != null) {
-            Doctor doctor = new Doctor();
-            doctor.setDoctorID((Integer) doctorIdObj);
-            appointment.setDoctorId(doctor);
-        }
-        Object serviceIdObj = rs.getObject("ServiceID");
-        if (serviceIdObj != null) {
-            Service service = new Service();
-            service.setServiceId((Integer) serviceIdObj);
-            appointment.setServiceId(service);
-        }
         appointment.setAppointmentDate(rs.getDate("AppointmentDate"));
         appointment.setStartTime(rs.getTime("StartTime"));
         appointment.setEndTime(rs.getTime("EndTime"));
@@ -158,30 +419,38 @@ public class AppointmentsDao extends DBContext {
         appointment.setCreatedDate(rs.getTimestamp("CreatedDate"));
         appointment.setUpdatedDate(rs.getTimestamp("UpdatedDate"));
 
+        // Patient
+        Patients patient = new Patients();
+        patient.setPatientID(rs.getInt("PatientID"));
+        Users uPatient = new Users();
+        uPatient.setFullName(rs.getString("PatientName"));
+        uPatient.setPhoneNumber(rs.getString("PatientPhone"));
+        uPatient.setDateOfBirth(rs.getDate("PatientDOB"));
+        uPatient.setGender(rs.getString("PatientGender"));
+        uPatient.setAddress(rs.getString("PatientAddress"));
+        patient.setUserID(uPatient);
+        appointment.setPatientId(patient);
+
+        // Doctor
+        Doctor doctor = new Doctor();
+        doctor.setDoctorID(rs.getInt("DoctorID"));
+        Users uDoctor = new Users();
+        uDoctor.setFullName(rs.getString("DoctorName"));
+        doctor.setUserId(uDoctor);
+        doctor.setSpecialization(rs.getString("DoctorSpecialization"));
+        doctor.setConsultationFee(rs.getBigDecimal("DoctorConsultationFee"));
+        appointment.setDoctorId(doctor);
+
+        // Service
+        Service service = new Service();
+        service.setServiceId(rs.getInt("ServiceID"));
+        service.setServiceName(rs.getString("ServiceName"));
+        appointment.setServiceId(service);
+
         return appointment;
     }
 
     public Integer insertAppointment(Appointments a) {
-        //check null cho tung doi tuong phai co doi tuong moi dat duoc lich
-        if (a == null || a.getPatientId() == null || a.getDoctorId() == null || a.getServiceId() == null) {
-            return null;
-        }
-        //check ngay thang nam dat lich
-        if (a.getAppointmentDate() == null || a.getStartTime() == null || a.getEndTime() == null) {
-            return null;
-        }
-        //start phai dung trc end
-        if (!a.getEndTime().after(a.getStartTime())) {
-            return null;
-        }
-
-        // check trung lap voi bac si
-        if (existsDoctorTimeConflict(a.getDoctorId().getDoctorID(), a.getAppointmentDate(),
-                a.getStartTime(), a.getEndTime())) {
-            //trung lap ve thoi gian
-            return null;
-
-        }
         String sql = """
         INSERT INTO dbo.Appointments
             (PatientID, DoctorID, ServiceID,
@@ -216,6 +485,7 @@ public class AppointmentsDao extends DBContext {
             return null;
 
         } catch (java.sql.SQLException e) {
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -238,20 +508,80 @@ public class AppointmentsDao extends DBContext {
         try (Connection cn = new DBContext().connection; PreparedStatement ps = cn.prepareStatement(sql)) {
             ps.setInt(1, doctorId);
             ps.setDate(2, appointmentDate);
-            ps.setTime(3, newEndTime);    
-            ps.setTime(4, newStartTime);  
-            ps.setTime(5, newEndTime);     
-            ps.setTime(6, newStartTime);  
-            ps.setTime(7, newStartTime);  
-            ps.setTime(8, newEndTime);    
+            ps.setTime(3, newEndTime);
+            ps.setTime(4, newStartTime);
+            ps.setTime(5, newEndTime);
+            ps.setTime(6, newStartTime);
+            ps.setTime(7, newStartTime);
+            ps.setTime(8, newEndTime);
 
             try (ResultSet rs = ps.executeQuery()) {
                 //co trung lap
                 return rs.next();
             }
         } catch (SQLException e) {
-            return true; 
+            return true;
         }
+    }
+
+    /**
+     * Lấy danh sách lịch sử các cuộc hẹn đã hoàn thành của một bệnh nhân. Hàm
+     * này truy vấn kèm tên bác sĩ và tên dịch vụ để hiển thị.
+     *
+     * @param patientId ID của bệnh nhân.
+     * @return Một List chứa thông tin cơ bản của các lần khám.
+     */
+    public List<Appointments> getAppointmentHistoryByPatientId(int patientId) {
+        List<Appointments> history = new ArrayList<>();
+        // Câu lệnh SQL JOIN các bảng để lấy thông tin cần thiết trong một lần truy vấn
+        String sql = """
+            SELECT 
+                a.AppointmentID, a.AppointmentDate, a.StartTime, a.Status, a.Notes,
+                s.ServiceName,
+                u.FullName AS DoctorName,
+                d.DoctorID,
+                s.ServiceID
+            FROM dbo.Appointments a
+            JOIN dbo.Services s ON a.ServiceID = s.ServiceID
+            JOIN dbo.Doctors d ON a.DoctorID = d.DoctorID
+            JOIN dbo.Users u ON d.UserID = u.UserID
+            WHERE a.PatientID = ? AND a.Status = 'Completed'
+            ORDER BY a.AppointmentDate DESC, a.StartTime DESC
+        """;
+
+        try (Connection conn = new DBContext().connection; PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, patientId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Appointments appointment = new Appointments();
+                    appointment.setAppointmentId(rs.getInt("AppointmentID"));
+                    appointment.setAppointmentDate(rs.getDate("AppointmentDate"));
+                    appointment.setStartTime(rs.getTime("StartTime"));
+                    appointment.setStatus(rs.getString("Status"));
+                    appointment.setNotes(rs.getString("Notes"));
+
+                    // Set thông tin Service (Dịch vụ)
+                    Service service = new Service();
+                    service.setServiceId(rs.getInt("ServiceID"));
+                    service.setServiceName(rs.getString("ServiceName"));
+                    appointment.setServiceId(service);
+
+                    // Set thông tin Doctor (Bác sĩ)
+                    Doctor doctor = new Doctor();
+                    doctor.setDoctorID(rs.getInt("DoctorID"));
+                    Users doctorUser = new Users();
+                    doctorUser.setFullName(rs.getString("DoctorName"));
+                    doctor.setUserId(doctorUser);
+                    appointment.setDoctorId(doctor);
+
+                    history.add(appointment);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return history;
     }
 
 }

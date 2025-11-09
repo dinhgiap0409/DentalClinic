@@ -33,7 +33,7 @@
             countdownSpan.textContent = countdown;
             if (countdown <= 0) {
                 clearInterval(interval);
-                window.location.href = '/DentalClinic/views/guest/home.jsp';
+                window.location.href = '/DentalClinic/home';
             }
         }, 1000);
     </script>

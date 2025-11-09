@@ -21,11 +21,12 @@ public class Service {
     private boolean isActive;
     private Users createdBy;
     private Timestamp createdDate;
+    private String image;
 
     public Service() {
     }
 
-    public Service(int serviceId, String serviceName, String description, BigDecimal price, int duration, boolean isActive, Users createdBy, Timestamp createdDate) {
+    public Service(int serviceId, String serviceName, String description, BigDecimal price, int duration, boolean isActive, Users createdBy, Timestamp createdDate, String image) {
         this.serviceId = serviceId;
         this.serviceName = serviceName;
         this.description = description;
@@ -34,6 +35,11 @@ public class Service {
         this.isActive = isActive;
         this.createdBy = createdBy;
         this.createdDate = createdDate;
+        this.image = image;
+    }
+
+    public Service(int serviceId) {
+        this.serviceId = serviceId;
     }
 
     public int getServiceId() {
@@ -100,9 +106,12 @@ public class Service {
         this.createdDate = createdDate;
     }
 
-    @Override
-    public String toString() {
-        return "Service{" + "serviceId=" + serviceId + ", serviceName=" + serviceName + ", description=" + description + ", price=" + price + ", duration=" + duration + ", isActive=" + isActive + ", createdBy=" + createdBy + ", createdDate=" + createdDate + '}';
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }
