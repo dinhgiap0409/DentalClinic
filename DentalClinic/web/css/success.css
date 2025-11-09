@@ -1,0 +1,213 @@
+/* ===========================
+   Success Page – DentalClinic
+   =========================== */
+
+:root{
+    --primary:#0d6efd;
+    --primary-600:#0b5ed7;
+    --success:#22c55e;
+    --bg:#f7f9fc;
+    --text:#222;
+    --muted:#667085;
+    --card:#ffffff;
+    --ring: rgba(13,110,253,.15);
+}
+
+*{
+    box-sizing: border-box;
+}
+
+html, body{
+    margin:0;
+    padding:0;
+    font-family: "Segoe UI", Roboto, Arial, sans-serif;
+    color:var(--text);
+    background: var(--bg);
+}
+
+/* Container center */
+.success-container{
+    min-height: calc(100vh - 140px); /* chừa khoảng header/footer */
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 16px;
+}
+
+/* Card */
+.success-box{
+    width:100%;
+    max-width:720px;
+    background:var(--card);
+    border-radius:20px;
+    padding:32px 28px;
+    box-shadow: 0 12px 30px rgba(16,24,40,.08);
+    position:relative;
+    overflow:hidden;
+    animation: cardIn .45s ease-out both;
+}
+
+/* Subtle gradient top bar */
+.success-box::before{
+    content:"";
+    position:absolute;
+    inset:0 0 auto 0;
+    height:6px;
+    background: linear-gradient(90deg, var(--primary) 0%, #60a5fa 35%, var(--success) 100%);
+    opacity:.9;
+}
+
+/* Icon */
+.success-icon{
+    width:82px;
+    height:82px;
+    display:grid;
+    place-items:center;
+    margin:8px auto 10px;
+    font-size:44px;
+    color:#fff;
+    background: radial-gradient(100% 100% at 30% 20%, #16a34a 0%, var(--success) 100%);
+    border-radius:50%;
+    box-shadow: 0 10px 20px rgba(34,197,94,.35), 0 0 0 10px rgba(34,197,94,.12);
+    animation: pop .5s ease-out .1s both;
+}
+
+/* Title */
+.success-box h1{
+    text-align:center;
+    font-size:28px;
+    margin:10px 0 8px;
+    letter-spacing:.2px;
+}
+
+/* Message */
+.success-message{
+    text-align:center;
+    color:var(--muted);
+    margin:0 auto 18px;
+    max-width:580px;
+    line-height:1.6;
+}
+
+/* Appointment info block */
+.appointment-info{
+    background: #f0f9ff;
+    border:1px solid #dbeafe;
+    color:#0f172a;
+    border-radius:14px;
+    padding:14px 16px;
+    margin: 12px auto 4px;
+    max-width:600px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+}
+
+.appointment-info p{
+    margin:6px 0;
+}
+
+.appointment-info strong{
+    color:#0b4fbf;
+}
+
+/* Actions (buttons) */
+.success-actions{
+    display:flex;
+    gap:12px;
+    justify-content:center;
+    align-items:center;
+    margin-top:22px;
+    flex-wrap:wrap;
+}
+
+.btn-primary,
+.btn-secondary{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:12px 18px;
+    border-radius:12px;
+    text-decoration:none;
+    font-weight:600;
+    transition: all .22s ease;
+    border:2px solid transparent;
+    box-shadow: 0 6px 18px rgba(13,110,253,.15);
+}
+
+.btn-primary{
+    background: var(--primary);
+    color:#fff;
+}
+
+.btn-primary:hover{
+    background: var(--primary-600);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 22px var(--ring);
+}
+
+.btn-secondary{
+    background:#ffffff;
+    color: var(--primary);
+    border-color: var(--primary);
+    box-shadow: none;
+}
+
+.btn-secondary:hover{
+    background: rgba(13,110,253,.06);
+    transform: translateY(-1px);
+}
+
+/* Small confetti dots (subtle) */
+.success-box::after{
+    content:"";
+    position:absolute;
+    right:-40px;
+    bottom:-40px;
+    width:220px;
+    height:220px;
+    background:
+        radial-gradient(4px 4px at 20px 30px, rgba(13,110,253,.25) 99%, transparent 100%),
+        radial-gradient(3px 3px at 120px 80px, rgba(34,197,94,.25) 99%, transparent 100%),
+        radial-gradient(3px 3px at 70px 150px, rgba(99,102,241,.25) 99%, transparent 100%),
+        radial-gradient(2px 2px at 170px 40px, rgba(234,179,8,.25) 99%, transparent 100%);
+    filter: blur(.2px);
+    opacity:.9;
+}
+
+/* Animations */
+@keyframes pop{
+    0%{
+        transform: scale(.8);
+        opacity: .2;
+    }
+    60%{
+        transform: scale(1.06);
+        opacity: 1;
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+@keyframes cardIn{
+    0%{
+        transform: translateY(8px);
+        opacity:0;
+    }
+    100%{
+        transform: translateY(0);
+        opacity:1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 640px){
+    .success-box{
+        padding:24px 18px;
+    }
+    .success-message{
+        padding:0 6px;
+    }
+    .btn-primary, .btn-secondary{
+        width:100%;
+    }
+}
