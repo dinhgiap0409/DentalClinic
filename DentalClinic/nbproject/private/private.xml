@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/PatientDao.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/PatientDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/DoctorDao.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/LogoutController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/filter/AuthorizationFilter.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/customer/profile.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/AppointmentDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/TimeSlotDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/LoginController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/ServiceController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/ResigterController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/DBContext.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/guest/pagination-section.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/CustomersBookSchedulesController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/DoctorWorkScheduleController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/common/header.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/ScheduleExceptionsDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dal/ScheduleDao.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/customer/service.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/HomeController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/constant/ConstantsBloodType.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/guest/doctorSchedule.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/guest/doctorList.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/BookAppointment/AppropriateSpecialistController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/customer/login.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/dto/ServiceDto.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/src/java/controller/ProfileController.java</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/common/body.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/WEB-INF/web.xml</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/customer/register.jsp</file>
+            <file>file:/D:/asm/DentalClinic/DentalClinic/web/views/guest/home.jsp</file>
+        </group>
+    </open-files>
+</project-private>
